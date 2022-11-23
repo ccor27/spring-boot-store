@@ -1,46 +1,25 @@
 package com.api.university.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 import javax.persistence.*;
 import java.util.List;
 @Entity
 @Table(name = "STUDENTS")
 public class Student extends Person{
-    @Column(name = "institutional_email")
+
     private String institutionalEmail;
+    private User user;
     @ManyToMany(mappedBy = "students")
-    @JsonBackReference
-    private List<Subject> subjects;
+    private List<Course> courses;
 
-
-    public Student(String name, String lastName, String email, String institutionalEmail) {
+    public Student(String name, String lastName, String email, String institutionalEmail, User user, List<Course> courses) {
         super(name, lastName, email);
         this.institutionalEmail = institutionalEmail;
+        this.user = user;
+        this.courses = courses;
     }
-    @OneToOne
-    @JoinColumn(name = "role",referencedColumnName = "id")
-    private Role role;
-
-    public Student(){}
-
-    public void addSubject(Subject subject){
-        this.subjects.add(subject);
-    }
-    public void deleteSubject(Subject subject){
-        this.subjects.remove(subject);
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-
+    public Student() {}
 
     public String getInstitutionalEmail() {
         return institutionalEmail;
@@ -50,11 +29,19 @@ public class Student extends Person{
         this.institutionalEmail = institutionalEmail;
     }
 
-    public List<Subject> getSubjects() {
-        return subjects;
+    public User getUser() {
+        return user;
     }
 
-    public void setSubjects(List<Subject> subjects) {
-        this.subjects = subjects;
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Course> getCourses() {
+        return courses;
+    }
+
+    public void setCourses(List<Course> courses) {
+        this.courses = courses;
     }
 }

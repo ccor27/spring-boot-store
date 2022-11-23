@@ -1,52 +1,32 @@
 package com.api.university.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+
 
 import javax.persistence.*;
+import java.util.List;
 
 @Entity
 @Table(name = "TEACHERS")
 public class Teacher extends Person{
 
-    private String degree;
-    @Column(name = "institutional_email")
     private String institutionalEmail;
-    @OneToOne(mappedBy = "teacher",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JsonBackReference
-    private Subject subject;
+    private String degree;
+    private User user;
+    @OneToMany(mappedBy = "teacher")
+    private List<Subject> subjects;
 
-
-    public Teacher(String name, String lastName, String email, String degree,String institutionalEmail) {
+    public Teacher(String name, String lastName, String email, String institutionalEmail, String degree, User user, List<Subject> subjects) {
         super(name, lastName, email);
+        this.institutionalEmail = institutionalEmail;
         this.degree = degree;
-        this.institutionalEmail=institutionalEmail;
+        this.user = user;
+        this.subjects = subjects;
     }
 
     public Teacher(){}
-    //@JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "role",referencedColumnName = "id")
-    private Role role;
+
     public String getInstitutionalEmail() {
         return institutionalEmail;
-    }
-
-    public Subject getSubject() {
-        return subject;
-    }
-
-    public void setSubject(Subject subject) {
-        this.subject = subject;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
     }
 
     public void setInstitutionalEmail(String institutionalEmail) {
@@ -61,13 +41,19 @@ public class Teacher extends Person{
         this.degree = degree;
     }
 
-    @Override
-    public String toString() {
-        return "Teacher{" +
-                "degree='" + degree + '\'' +
-                ", institutionalEmail='" + institutionalEmail + '\'' +
-                ", subject=" + subject.getName() +
-                ", role=" + role +
-                '}';
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Subject> getSubjects() {
+        return subjects;
+    }
+
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
     }
 }
