@@ -9,6 +9,7 @@ import java.util.List;
 public class Student extends Person{
 
     private String institutionalEmail;
+    @OneToOne
     private User user;
     @ManyToMany(mappedBy = "students")
     private List<Course> courses;
@@ -43,5 +44,12 @@ public class Student extends Person{
 
     public void setCourses(List<Course> courses) {
         this.courses = courses;
+    }
+
+    @Override
+    public String toString() {
+        return super.toString()+
+                "institutionalEmail='" + institutionalEmail + '\'' +
+                ", user=" + user.getUsername() ;
     }
 }

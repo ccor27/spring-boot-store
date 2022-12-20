@@ -6,13 +6,18 @@ import java.util.List;
 @Entity
 @Table(name = "USERS")
 public class User {
-
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String username;
     private String pwd;
-    @OneToMany
-    @Enumerated(EnumType.STRING)
+    //@Enumerated(EnumType.STRING)
+    @ManyToMany(fetch = FetchType.EAGER)
+    @JoinTable(
+            name = "users_roles",
+            joinColumns = @JoinColumn(name = "user_id"),
+            inverseJoinColumns = @JoinColumn(name = "role_id")
+    )
     private List<Role> roles;
 
     public User(String username, String pwd, List<Role> roles) {
@@ -20,7 +25,7 @@ public class User {
         this.pwd = pwd;
         this.roles = roles;
     }
-    public User(){}
+    public User(){      }
 
     public Long getId() {
         return id;

@@ -1,15 +1,17 @@
 package com.api.university.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fasterxml.jackson.annotation.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Entity
 @Table(name = "SUBJECT")
+@JsonIdentityInfo(
+        generator = ObjectIdGenerators.PropertyGenerator.class,
+        property = "name")
 public class Subject {
-
+    @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
@@ -19,9 +21,10 @@ public class Subject {
     private Double noteThree;
     private Double noteFour;
     private Double finalNote;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
     private Course course;
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.REFRESH)
+    //@JsonBackReference
     private Teacher teacher;
 
     public Subject(String name, String description, Double noteOne, Double noteTwo, Double noteThree, Double noteFour, Double finalNote, Course course, Teacher teacher) {
@@ -117,4 +120,7 @@ public class Subject {
     public void setTeacher(Teacher teacher) {
         this.teacher = teacher;
     }
+
+
+
 }

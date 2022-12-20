@@ -1,12 +1,13 @@
 package com.api.university.model;
 
 import javax.persistence.Entity;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @Entity
 @Table(name = "ADMINS")
 public class Admin extends Person{
-
+    @OneToOne
     private User user;
 
     public Admin(String name, String lastName, String email, User user) {
