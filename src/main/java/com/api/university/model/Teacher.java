@@ -1,46 +1,36 @@
 package com.api.university.model;
 
 
-
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
-
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
 import java.util.List;
 
 @Entity
 @Table(name = "TEACHERS")
-@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "name")
 public class Teacher extends Person{
 
-    private String institutionalEmail;
     private String degree;
+    private String institutionalEmail;
+    @OneToOne
+    private Subject subject;
     @OneToOne
     private User user;
-    @OneToMany(mappedBy = "teacher")
-    //@JsonManagedReference
-    private List<Subject> subjects;
+    @OneToMany
+    private List<Student> students;
 
-    public Teacher(String name, String lastName, String email, String institutionalEmail, String degree, User user, List<Subject> subjects) {
+    public Teacher(String name, String lastName, String email, String degree, String institutionalEmail, Subject subject, User user, List<Student> students) {
         super(name, lastName, email);
-        this.institutionalEmail = institutionalEmail;
         this.degree = degree;
-        this.user = user;
-        this.subjects = subjects;
-    }
-
-    public Teacher(){}
-
-    public String getInstitutionalEmail() {
-        return institutionalEmail;
-    }
-
-    public void setInstitutionalEmail(String institutionalEmail) {
         this.institutionalEmail = institutionalEmail;
+        this.subject = subject;
+        this.user = user;
+        this.students = students;
+    }
+
+    public Teacher() {
+
     }
 
     public String getDegree() {
@@ -51,6 +41,22 @@ public class Teacher extends Person{
         this.degree = degree;
     }
 
+    public String getInstitutionalEmail() {
+        return institutionalEmail;
+    }
+
+    public void setInstitutionalEmail(String institutionalEmail) {
+        this.institutionalEmail = institutionalEmail;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
     public User getUser() {
         return user;
     }
@@ -59,37 +65,11 @@ public class Teacher extends Person{
         this.user = user;
     }
 
-    public List<Subject> getSubjects() {
-        return subjects;
+    public List<Student> getStudents() {
+        return students;
     }
 
-    public void setSubjects(List<Subject> subjects) {
-        this.subjects = subjects;
-    }
-
-    public String data(){
-        return "teacher: "+this.getName()+" subjects: "+subjectsNames();
-    }
-    private String subjectsNames(){
-        String names = "";
-        for (Subject subject: subjects) {
-            names+=subject.getName()+" -";
-        }
-        return names;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (!(o instanceof Teacher)) return false;
-
-        Teacher teacher = (Teacher) o;
-
-        return institutionalEmail.equals(teacher.institutionalEmail);
-    }
-
-    @Override
-    public int hashCode() {
-        return institutionalEmail.hashCode();
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 }

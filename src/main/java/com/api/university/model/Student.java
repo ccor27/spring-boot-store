@@ -11,16 +11,18 @@ public class Student extends Person{
     private String institutionalEmail;
     @OneToOne
     private User user;
-    @ManyToMany(mappedBy = "students")
-    private List<Course> courses;
+    @OneToMany
+    private List<Subject> subjects;
 
-    public Student(String name, String lastName, String email, String institutionalEmail, User user, List<Course> courses) {
+    public Student(String name, String lastName, String email, String institutionalEmail, User user, List<Subject> subjects) {
         super(name, lastName, email);
         this.institutionalEmail = institutionalEmail;
         this.user = user;
-        this.courses = courses;
+        this.subjects = subjects;
     }
-    public Student() {}
+
+    public Student() {
+    }
 
     public String getInstitutionalEmail() {
         return institutionalEmail;
@@ -38,18 +40,11 @@ public class Student extends Person{
         this.user = user;
     }
 
-    public List<Course> getCourses() {
-        return courses;
+    public List<Subject> getSubjects() {
+        return subjects;
     }
 
-    public void setCourses(List<Course> courses) {
-        this.courses = courses;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString()+
-                "institutionalEmail='" + institutionalEmail + '\'' +
-                ", user=" + user.getUsername() ;
+    public void setSubjects(List<Subject> subjects) {
+        this.subjects = subjects;
     }
 }

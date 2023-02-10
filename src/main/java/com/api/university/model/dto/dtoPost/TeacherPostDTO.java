@@ -1,23 +1,13 @@
-package com.api.university.model;
+package com.api.university.model.dto.dtoPost;
 
-import javax.persistence.*;
+public class TeacherPostDTO{
 
-@MappedSuperclass
-public abstract class Person {
-
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String lastName;
     private String email;
-
-    public Person(String name, String lastName, String email) {
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
-    }
-    public Person(){}
+    private String degree;
+    private String institutionalEmail;
 
     public Long getId() {
         return id;
@@ -51,11 +41,20 @@ public abstract class Person {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return  "id=" + id +
-                ", name='" + name +
-                ", lastName='" + lastName +
-                ", email='" + email ;
+    public String getDegree() {
+        return degree;
     }
+
+    public void setDegree(String degree) {
+        this.degree = degree;
+    }
+
+    public String getInstitutionalEmail() {
+        return institutionalEmail;
+    }
+
+    public void setInstitutionalEmail(String institutionalEmail) {
+        this.institutionalEmail = institutionalEmail;
+    }
+
 }
