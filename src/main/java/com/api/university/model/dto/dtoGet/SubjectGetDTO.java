@@ -1,37 +1,14 @@
-package com.api.university.model;
+package com.api.university.model.dto.dtoGet;
 
-import com.fasterxml.jackson.annotation.*;
+public class SubjectGetDTO {
 
-import javax.persistence.*;
-import java.util.List;
-
-@Entity
-@Table(name = "SUBJECT")
-/**@JsonIdentityInfo(
-        generator = ObjectIdGenerators.PropertyGenerator.class,
-        property = "name")**/
-public class Subject {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
-    //private List<String> topics;
     private Double noteOne;
     private Double noteTwo;
     private Double noteThree;
     private Double noteFour;
     private Double finalNote;
-
-    public Subject(){}
-    public Subject(String name, Double noteOne, Double noteTwo, Double noteThree, Double noteFour, Double finalNote) {
-        this.name = name;
-        //this.topics = topics;
-        this.noteOne = noteOne;
-        this.noteTwo = noteTwo;
-        this.noteThree = noteThree;
-        this.noteFour = noteFour;
-        this.finalNote = finalNote;
-    }
 
     public Long getId() {
         return id;
@@ -82,7 +59,6 @@ public class Subject {
     }
 
     public Double getFinalNote() {
-        finalNote = (noteOne+noteTwo+noteThree+noteFour)/4;
         return finalNote;
     }
 

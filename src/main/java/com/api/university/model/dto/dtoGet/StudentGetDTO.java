@@ -1,23 +1,15 @@
-package com.api.university.model;
+package com.api.university.model.dto.dtoGet;
 
-import javax.persistence.*;
+import java.util.List;
 
-@MappedSuperclass
-public abstract class Person {
+public class StudentGetDTO {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String name;
     private String lastName;
     private String email;
-
-    public Person(String name, String lastName, String email) {
-        this.name = name;
-        this.lastName = lastName;
-        this.email = email;
-    }
-    public Person(){}
+    private String institutionalEmail;
+    private List<SubjectGetDTO> subjectDTOS;
 
     public Long getId() {
         return id;
@@ -51,11 +43,19 @@ public abstract class Person {
         this.email = email;
     }
 
-    @Override
-    public String toString() {
-        return  "id=" + id +
-                ", name='" + name +
-                ", lastName='" + lastName +
-                ", email='" + email ;
+    public String getInstitutionalEmail() {
+        return institutionalEmail;
+    }
+
+    public void setInstitutionalEmail(String institutionalEmail) {
+        this.institutionalEmail = institutionalEmail;
+    }
+
+    public List<SubjectGetDTO> getSubjectDTOS() {
+        return subjectDTOS;
+    }
+
+    public void setSubjectDTOS(List<SubjectGetDTO> subjectDTOS) {
+        this.subjectDTOS = subjectDTOS;
     }
 }

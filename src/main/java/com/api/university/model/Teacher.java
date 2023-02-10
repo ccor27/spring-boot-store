@@ -1,56 +1,36 @@
 package com.api.university.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 
-import javax.persistence.*;
+import javax.persistence.Entity;
+import javax.persistence.OneToMany;
+import javax.persistence.OneToOne;
+import javax.persistence.Table;
+import java.util.List;
 
 @Entity
 @Table(name = "TEACHERS")
 public class Teacher extends Person{
 
     private String degree;
-    @Column(name = "institutional_email")
     private String institutionalEmail;
-    @OneToOne(mappedBy = "teacher",fetch = FetchType.EAGER,cascade = CascadeType.ALL)
-    @JsonBackReference
+    @OneToOne
     private Subject subject;
+    @OneToOne
+    private User user;
+    @OneToMany
+    private List<Student> students;
 
-
-    public Teacher(String name, String lastName, String email, String degree,String institutionalEmail) {
+    public Teacher(String name, String lastName, String email, String degree, String institutionalEmail, Subject subject, User user, List<Student> students) {
         super(name, lastName, email);
         this.degree = degree;
-        this.institutionalEmail=institutionalEmail;
-    }
-
-    public Teacher(){}
-    //@JsonIgnore
-    @OneToOne
-    @JoinColumn(name = "role",referencedColumnName = "id")
-    private Role role;
-    public String getInstitutionalEmail() {
-        return institutionalEmail;
-    }
-
-    public Subject getSubject() {
-        return subject;
-    }
-
-    public void setSubject(Subject subject) {
-        this.subject = subject;
-    }
-
-    public Role getRole() {
-        return role;
-    }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-    public void setInstitutionalEmail(String institutionalEmail) {
         this.institutionalEmail = institutionalEmail;
+        this.subject = subject;
+        this.user = user;
+        this.students = students;
+    }
+
+    public Teacher() {
+
     }
 
     public String getDegree() {
@@ -61,13 +41,35 @@ public class Teacher extends Person{
         this.degree = degree;
     }
 
-    @Override
-    public String toString() {
-        return "Teacher{" +
-                "degree='" + degree + '\'' +
-                ", institutionalEmail='" + institutionalEmail + '\'' +
-                ", subject=" + subject.getName() +
-                ", role=" + role +
-                '}';
+    public String getInstitutionalEmail() {
+        return institutionalEmail;
+    }
+
+    public void setInstitutionalEmail(String institutionalEmail) {
+        this.institutionalEmail = institutionalEmail;
+    }
+
+    public Subject getSubject() {
+        return subject;
+    }
+
+    public void setSubject(Subject subject) {
+        this.subject = subject;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public List<Student> getStudents() {
+        return students;
+    }
+
+    public void setStudents(List<Student> students) {
+        this.students = students;
     }
 }

@@ -1,46 +1,28 @@
 package com.api.university.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonProperty;
+
 
 import javax.persistence.*;
 import java.util.List;
 @Entity
 @Table(name = "STUDENTS")
 public class Student extends Person{
-    @Column(name = "institutional_email")
+
     private String institutionalEmail;
-    @ManyToMany(mappedBy = "students")
-    @JsonBackReference
+    @OneToOne
+    private User user;
+    @OneToMany
     private List<Subject> subjects;
 
-
-    public Student(String name, String lastName, String email, String institutionalEmail) {
+    public Student(String name, String lastName, String email, String institutionalEmail, User user, List<Subject> subjects) {
         super(name, lastName, email);
         this.institutionalEmail = institutionalEmail;
-    }
-    @OneToOne
-    @JoinColumn(name = "role",referencedColumnName = "id")
-    private Role role;
-
-    public Student(){}
-
-    public void addSubject(Subject subject){
-        this.subjects.add(subject);
-    }
-    public void deleteSubject(Subject subject){
-        this.subjects.remove(subject);
+        this.user = user;
+        this.subjects = subjects;
     }
 
-    public Role getRole() {
-        return role;
+    public Student() {
     }
-
-    public void setRole(Role role) {
-        this.role = role;
-    }
-
-
 
     public String getInstitutionalEmail() {
         return institutionalEmail;
@@ -48,6 +30,14 @@ public class Student extends Person{
 
     public void setInstitutionalEmail(String institutionalEmail) {
         this.institutionalEmail = institutionalEmail;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public List<Subject> getSubjects() {

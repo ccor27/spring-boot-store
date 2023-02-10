@@ -1,20 +1,9 @@
-package com.api.university.model;
+package com.api.university.model.dto.dtoPost;
 
-import javax.persistence.*;
+public class RoleDTO {
 
-@Entity
-@Table(name = "ROLES")
-public class Role  {
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String roleName;
-
-    public Role(Long id, String role_name) {
-        this.id = id;
-        this.roleName = role_name;
-    }
-    public Role(){}
 
     public Long getId() {
         return id;
