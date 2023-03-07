@@ -1,7 +1,11 @@
 package com.api.store.model;
 
+import com.sun.istack.NotNull;
+import org.springframework.transaction.annotation.Transactional;
+
 import javax.persistence.*;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Set;
 @Entity
 public class Sale {
@@ -12,15 +16,14 @@ public class Sale {
     @Temporal(TemporalType.DATE)
     private Date created_at;
     private Double price;
-    @OneToOne(cascade = CascadeType.REFRESH)
-    private Customer customer;
-    @OneToMany
+    @ManyToMany
+    @Column(unique = false,nullable = false)
+    @JoinTable(name = "sale_products")
     private Set<Product> products;
     public Sale(){}
 
-    public Sale(String concept, Customer customer, Set<Product> products) {
+    public Sale(String concept,  Set<Product> products) {
         this.concept = concept;
-        this.customer = customer;
         this.products = products;
         this.price=0.0;
         onPrePersist();
@@ -66,14 +69,6 @@ public class Sale {
         this.price = price;
     }
 
-    public Customer getCustomer() {
-        return customer;
-    }
-
-    public void setCustomer(Customer customer) {
-        this.customer = customer;
-    }
-
     public Set<Product> getProducts() {
         return products;
     }
@@ -82,6 +77,9 @@ public class Sale {
         this.products = products;
     }
 
+     public void addProduct(Product product){
+        this.products.add(product);
+    }
     @Override
     public String toString() {
         return "Sale{" +
@@ -89,7 +87,6 @@ public class Sale {
                 ", concept='" + concept + '\'' +
                 ", created_at=" + created_at +
                 ", price=" + price +
-                ", customer=" + customer +
                 ", products=" + products +
                 '}';
     }

@@ -4,6 +4,7 @@ import java.util.Set;
 
 public record RecordDTO(
         Long id,
+        String customerName,
         Set<SaleDTO> saleDTOS
 ) {
 }

@@ -1,9 +1,7 @@
 package com.api.store.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
+
 @Entity
 public class Product {
     @Id
@@ -81,5 +79,13 @@ public class Product {
 
     public void setOrigin(String origin) {
         this.origin = origin;
+    }
+
+    @Override
+    public String toString() {
+        return "Product{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                '}';
     }
 }

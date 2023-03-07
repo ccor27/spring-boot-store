@@ -1,18 +1,4 @@
---INSERT INTO STUDENTS (name,last_name,email,institutional_email) VALUES('cristian','osorio','cris@gmail.com','cris@gmail.edu.co')
---INSERT INTO STUDENTS (name,last_name,email,institutional_email) VALUES('camilo','osorio','camilo@gmail.com','camilo@gmail.edu.co')
---INSERT INTO TEACHERS (name,last_name,email,degree,institutional_email) VALUES('jose','cardona','jose@gmail.com','engineer','jose@gmail.edu.co')
---INSERT INTO TEACHERS (name,last_name,email,degree,institutional_email) VALUES('milena','ramirez','milena@gmail.com','engineer','milena@gmail.edu.co')-
---INSERT INTO SUBJECT (name,description) VALUES('programming I','learn the bases on programming')
---INSERT INTO REL_STUDENTS_SUBJECTS (subject_id,student_id) VALUES(1,1);
---INSERT INTO REL_STUDENTS_SUBJECTS (subject_id,student_id) VALUES(1,2);
---UPDATE SUBJECT SET teacher_id = 1 WHERE id = 1;
---UPDATE REL_STUDENTS_SUBJECTS SET FK_STUDENT = 1;
---UPDATE REL_STUDENTS_SUBJECTS SET FK_SUBJECT = 1;
-
-
 --create some products
-
-
 insert into product (name, description, price, amount, bar_code, origin) values ('Nantucket - Kiwi Berry Cktl.', 'Nam nulla. Integer pede justo, lacinia eget, tincidunt eget, tempus vel, pede.', 2847.01, 45, 'NASDAQ', 'Indonesia');
 insert into product (name, description, price, amount, bar_code, origin) values ('Horseradish Root', 'Etiam faucibus cursus urna.', 7738.53, 83, 'NASDAQ', 'Portugal');
 insert into product (name, description, price, amount, bar_code, origin) values ('Wine - Casablanca Valley', 'Fusce consequat. Nulla nisl.', 7187.37, 44, 'NYSE', 'China');
@@ -82,34 +68,42 @@ insert into customer (name, last_name, email, phone, username, pwd) values ('Nil
 UPDATE customer SET address_id=2 WHERE id = 1;
 
 --create sales
-insert into sale (concept, created_at, price, customer_id) values ('In hac habitasse platea dictumst.', current_timestamp, 0, 3);
-insert into sale (concept, created_at, price, customer_id) values ('Nullam sit amet turpis elementum ligula vehicula consequat.', current_timestamp, 0, 5);
-insert into sale (concept, created_at, price, customer_id) values ('Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', current_timestamp, 0, 7);
-insert into sale (concept, created_at, price, customer_id) values ('Nullam porttitor lacus at turpis.', current_timestamp, 0, 10);
-insert into sale (concept, created_at, price, customer_id) values ('Nunc purus.', current_timestamp, 0, 7);
-insert into sale (concept, created_at, price, customer_id) values ('Ut at dolor quis odio consequat varius.', current_timestamp, 0, 4);
-insert into sale (concept, created_at, price, customer_id) values ('Duis bibendum.', current_timestamp, 0, 4);
-insert into sale (concept, created_at, price, customer_id) values ('Donec ut dolor.', current_timestamp, 0, 3);
-insert into sale (concept, created_at, price, customer_id) values ('Suspendisse ornare consequat lectus.',current_timestamp, 0, 6);
-insert into sale (concept, created_at, price, customer_id) values ('Sed sagittis.', current_timestamp, 0, 5);
+insert into sale (concept, created_at, price) values ('In hac habitasse platea dictumst.', current_timestamp, 0);
+insert into sale (concept, created_at, price) values ('Nullam sit amet turpis elementum ligula vehicula consequat.', current_timestamp, 0);
+insert into sale (concept, created_at, price) values ('Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', current_timestamp, 0);
+insert into sale (concept, created_at, price) values ('Nullam porttitor lacus at turpis.', current_timestamp, 0);
+insert into sale (concept, created_at, price) values ('Nunc purus.', current_timestamp, 0);
+insert into sale (concept, created_at, price) values ('Ut at dolor quis odio consequat varius.', current_timestamp, 0);
+insert into sale (concept, created_at, price) values ('Duis bibendum.', current_timestamp, 0);
+insert into sale (concept, created_at, price) values ('Donec ut dolor.', current_timestamp, 0);
+insert into sale (concept, created_at, price) values ('Suspendisse ornare consequat lectus.',current_timestamp, 0);
+insert into sale (concept, created_at, price) values ('Sed sagittis.', current_timestamp, 0);
 --add products in the sale
+
+insert into sale_products (sale_id, products_id) values (4, 7);
+insert into sale_products (sale_id, products_id) values (4, 8);
+insert into sale_products (sale_id, products_id) values (7, 14);
+
+
+
 insert into sale_products (sale_id, products_id) values (1, 1);
 insert into sale_products (sale_id, products_id) values (1, 2);
 insert into sale_products (sale_id, products_id) values (2, 3);
 insert into sale_products (sale_id, products_id) values (2, 4);
 insert into sale_products (sale_id, products_id) values (3, 5);
 insert into sale_products (sale_id, products_id) values (3, 6);
-insert into sale_products (sale_id, products_id) values (4, 7);
-insert into sale_products (sale_id, products_id) values (4, 8);
+
+
 insert into sale_products (sale_id, products_id) values (5, 9);
 insert into sale_products (sale_id, products_id) values (5, 10);
 insert into sale_products (sale_id, products_id) values (6, 11);
 insert into sale_products (sale_id, products_id) values (6, 12);
 insert into sale_products (sale_id, products_id) values (7, 13);
-insert into sale_products (sale_id, products_id) values (7, 14);
+
 insert into sale_products (sale_id, products_id) values (8, 15);
 insert into sale_products (sale_id, products_id) values (8, 16);
 insert into sale_products (sale_id, products_id) values (9, 17);
 insert into sale_products (sale_id, products_id) values (9, 18);
 insert into sale_products (sale_id, products_id) values (10, 19);
 insert into sale_products (sale_id, products_id) values (10, 20);
+

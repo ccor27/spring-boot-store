@@ -3,7 +3,6 @@ import java.util.Set;
 
 public record SaleRegistrationRequest(
         String concept,
-        CustomerDTO customerDTO,
         Set<ProductDTO> productsDTO
 ) {
 }

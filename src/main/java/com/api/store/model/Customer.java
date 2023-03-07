@@ -9,6 +9,7 @@ public class Customer extends Person{
     @Column(length = 12)
     private String phone;
     @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "record_id")
     private Record record;
     private String username;
     private String pwd;

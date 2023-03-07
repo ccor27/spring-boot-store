@@ -27,7 +27,6 @@ public class SaleDTOMapper implements Function<Sale, SaleDTO> {
                 sale.getConcept(),
                 sale.getCreated_at(),
                 sale.getPrice(),
-                customerExist(sale.getCustomer()).name(),
                 productsExisting(sale.getProducts())
 
         );

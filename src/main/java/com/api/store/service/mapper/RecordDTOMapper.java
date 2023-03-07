@@ -15,6 +15,7 @@ public class RecordDTOMapper implements Function<Record, RecordDTO> {
     public RecordDTO apply(Record record) {
         return new RecordDTO(
                 record.getId(),
+                record.getCustomer()!=null ? record.getCustomer().getName() : "",
                 record.getSaleSet().stream().map(sale -> {
                     return saleDTOMapper.apply(sale);
                 }).collect(Collectors.toSet())

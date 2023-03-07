@@ -8,6 +8,7 @@ import com.api.store.model.dto.ProductDTO;
 import com.api.store.model.dto.SaleDTO;
 import com.api.store.model.dto.SaleRegistrationRequest;
 import com.api.store.repository.CustomerRepository;
+import com.api.store.repository.ProductRepository;
 import com.api.store.repository.SaleRepository;
 import com.api.store.service.mapper.SaleDTOMapper;
 import org.slf4j.Logger;
@@ -15,6 +16,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -27,8 +29,6 @@ public class SaleServiceImp implements ISaleService{
     @Autowired
     private SaleDTOMapper saleDTOMapper;
     @Autowired
-    private CustomerRepository customerRepository;
-    @Autowired
     private IProductService iProductService;
 
 
@@ -36,10 +36,8 @@ public class SaleServiceImp implements ISaleService{
     public SaleDTO save(SaleRegistrationRequest saleRegistrationRequest) {
         Sale sale= new Sale(
                 saleRegistrationRequest.concept(),
-                findCustomerOfSale(saleRegistrationRequest.customerDTO()),
                 convertProductsDTOToProduct(saleRegistrationRequest.productsDTO())
         );
-        LOGGER.info("SALE: "+sale.toString());
         saleRepository.save(sale);
         LOGGER.info("Sale saved successfully "+sale.toString() );
         return saleDTOMapper.apply(sale);
@@ -68,12 +66,8 @@ public class SaleServiceImp implements ISaleService{
     public Sale findSaleById(Long id){
         return saleRepository.findById(id) != null ? saleRepository.findById(id).get() : null;
     }
-    private Customer findCustomerOfSale(CustomerDTO customerDTO){
-            return customerRepository.findById(customerDTO.id()).orElse(null);
 
-    }
-
-    private Set<Product> convertProductsDTOToProduct(Set<ProductDTO> productDTOS){
+    public Set<Product> convertProductsDTOToProduct(Set<ProductDTO> productDTOS){
 
         if(productDTOS ==null || productDTOS.isEmpty())
             return null;
@@ -82,4 +76,6 @@ public class SaleServiceImp implements ISaleService{
             return iProductService.findProductById(productDTO.id());
         }).collect(Collectors.toSet());
     }
+
+
 }
