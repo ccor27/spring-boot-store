@@ -15,7 +15,7 @@ public class Sale {
     private String concept;
     @Temporal(TemporalType.DATE)
     private Date created_at;
-    private Double price;
+    private Double price=0.0;
     @ManyToMany
     @Column(unique = false,nullable = false)
     @JoinTable(name = "sale_products")
@@ -25,11 +25,12 @@ public class Sale {
     public Sale(String concept,  Set<Product> products) {
         this.concept = concept;
         this.products = products;
-        this.price=0.0;
-        onPrePersist();
+        knowPrice();
     }
 
-    @PrePersist  void onPrePersist() {created_at = new java.util.Date();}
+    @PrePersist  void onPrePersist() {
+        created_at = new java.util.Date();
+    }
 
     public Long getId() {
         return id;
@@ -54,15 +55,21 @@ public class Sale {
     public void setCreated_at(Date created_at) {
         this.created_at = created_at;
     }
-    //@PrePersist
-    public Double getPrice() {
-     if(this.products==null)
-         return 0.0;
+   // @PrePersist
+    public void knowPrice(){
 
-        this.products.stream().forEach(product -> {
-            this.price+=product.getPrice()*product.getAmount();
-        });
-        return price;
+        if(this.products!=null){
+
+            this.products.stream().forEach(product -> {
+                this.price+=product.getPrice()*product.getAmount();
+            });
+
+        }
+        System.out.println("no tiene productos");
+    }
+    public Double getPrice() {
+        knowPrice();
+        return this.price;
     }
 
     public void setPrice(Double price) {

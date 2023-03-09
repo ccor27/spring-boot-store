@@ -2,6 +2,7 @@ package com.api.store.controller;
 
 import com.api.store.model.dto.RecordDTO;
 import com.api.store.model.dto.RecordRegistrationRequest;
+import com.api.store.model.dto.SaleDTO;
 import com.api.store.service.IRecordService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -41,5 +42,15 @@ public class RecordController {
         }else{
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+    }
+    @PutMapping("{id}/sale")
+    public ResponseEntity<?> addSale(@RequestBody SaleDTO saleDTO, @PathVariable("id") Long id){
+        boolean isAdded = iRecordService.addSale(saleDTO,id);
+        return isAdded ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @DeleteMapping("{id}/sale")
+    public ResponseEntity<?> removeSale(@RequestBody SaleDTO saleDTO, @PathVariable("id") Long id){
+        boolean isAdded = iRecordService.removeSale(saleDTO,id);
+        return isAdded ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }

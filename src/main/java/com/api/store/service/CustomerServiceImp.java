@@ -3,7 +3,6 @@ package com.api.store.service;
 import com.api.store.model.Address;
 import com.api.store.model.Customer;
 import com.api.store.model.Record;
-import com.api.store.model.Sale;
 import com.api.store.model.dto.*;
 import com.api.store.repository.CustomerRepository;
 import com.api.store.service.mapper.CustomerDTOMapper;
@@ -32,21 +31,38 @@ public class CustomerServiceImp implements ICustomerService{
     private ISaleService iSaleService;
     @Autowired
     private IRecordService iRecordService;
+    @Autowired
+    private IAddressService iAddressService;
 
     @Override
     public CustomerDTO save(CustomerRegistrationRequest customerRegistrationRequest) {
-        Customer customer = new Customer(
-                customerRegistrationRequest.name(),
-                customerRegistrationRequest.lastName(),
-                customerRegistrationRequest.email(),
-                customerRegistrationRequest.phone(),
-                customerRegistrationRequest.username(),
-                customerRegistrationRequest.pwd(),
-                convertAddressRegistrationToAddressDTO(customerRegistrationRequest.address()),
-                new HashSet<>()
-        );
-        customerRepository.save(customer);
+        Customer customer = null;
 
+        if(customerRegistrationRequest.address()!=null) {
+                    customer = new Customer(
+                    customerRegistrationRequest.name(),
+                    customerRegistrationRequest.lastName(),
+                    customerRegistrationRequest.email(),
+                    customerRegistrationRequest.phone(),
+                    customerRegistrationRequest.username(),
+                    customerRegistrationRequest.pwd(),
+                    convertAddressRegistrationToAddressDTO(customerRegistrationRequest.address()),
+                    new HashSet<>()
+            );
+        }else{
+
+            customer = new Customer(
+                    customerRegistrationRequest.name(),
+                    customerRegistrationRequest.lastName(),
+                    customerRegistrationRequest.email(),
+                    customerRegistrationRequest.phone(),
+                    customerRegistrationRequest.username(),
+                    customerRegistrationRequest.pwd(),
+                    new HashSet<>()
+            );
+        }
+        customerRepository.save(customer);
+        LOGGER.info("CUSTOMER: customer creates successfully");
         return customerDTOMapper.apply(customer);
     }
 
@@ -54,8 +70,10 @@ public class CustomerServiceImp implements ICustomerService{
     public CustomerDTO findById(Long id) {
         Customer customer = customerRepository.findById(id).orElse(null);
         if(customer!=null){
+            LOGGER.info("CUSTOMER: customer found successfully");
             return customerDTOMapper.apply(customer);
         }else{
+            LOGGER.error("CUSTOMER: the customer doesn't exist");
             return null;
         }
     }
@@ -63,17 +81,25 @@ public class CustomerServiceImp implements ICustomerService{
     @Override
     public CustomerDTO updateInfo(CustomerUpdateRequest customerUpdateRequest) {
         Customer customer = customerRepository.findById(customerUpdateRequest.id()).orElse(null);
-        customer.setId(customerUpdateRequest.id());
-        customer.setName(customerUpdateRequest.name());
-        customer.setLastName(customerUpdateRequest.lastName());
-        customer.setEmail(customerUpdateRequest.email());
-        customer.setPhone(customerUpdateRequest.phone());
-        customerRepository.save(customer);
-        return customerDTOMapper.apply(customer);
+        if(customer!=null){
+
+            customer.setId(customerUpdateRequest.id());
+            customer.setName(customerUpdateRequest.name());
+            customer.setLastName(customerUpdateRequest.lastName());
+            customer.setEmail(customerUpdateRequest.email());
+            customer.setPhone(customerUpdateRequest.phone());
+            customerRepository.save(customer);
+            LOGGER.info("CUSTOMER: customer updated successfully");
+            return customerDTOMapper.apply(customer);
+        }else{
+            LOGGER.error("CUSTOMER: the customer doesn't exist");
+            return null;
+        }
     }
 
     @Override
     public Set<CustomerDTO> findAll() {
+        LOGGER.info("CUSTOMER: customers found successfully");
         return customerRepository.findAll().stream().map(customer -> {
             return customerDTOMapper.apply(customer);
         }).collect(Collectors.toSet());
@@ -83,8 +109,10 @@ public class CustomerServiceImp implements ICustomerService{
     public Customer findCustomerById(Long id) {
         Customer customer = customerRepository.findById(id).orElse(null);
         if(customer!=null){
+            LOGGER.info("CUSTOMER: customer found successfully");
             return customer;
         }else{
+            LOGGER.error("CUSTOMER: customer doesn't exist");
             return null;
         }
     }
@@ -199,6 +227,43 @@ public class CustomerServiceImp implements ICustomerService{
             return true;
         }
         return false;//this is by default ;)
+    }
+
+    @Override
+    public CustomerDTO addAddress(AddressRegistrationRequest addressRegistrationRequest, Long id) {
+
+        Customer customer = findCustomerById(id);
+        if(customer==null){
+            LOGGER.error("CUSTOMER: the customer doesn't exist or the address send is null, therefore is not possible make the operation");
+            return null;
+        }else{
+            customer.setAddress(convertAddressRegistrationToAddressDTO(addressRegistrationRequest));
+            customerRepository.save(customer);
+            LOGGER.info("CUSTOMER: address added to customer successfully");
+            return customerDTOMapper.apply(customer);
+        }
+
+
+    }
+
+    @Override
+    public CustomerDTO removeAddress(AddressDTO addressDTO, Long id) {
+        Customer customer = findCustomerById(id);
+        if(customer==null){
+            LOGGER.error("CUSTOMER: the customer doesn't exist or the address send is null, therefore is not possible make the operation");
+            return null;
+        }else{
+            Address address = iAddressService.findAddressById(addressDTO.id());
+            if(address!=null) {
+                customer.setAddress(null);
+                customerRepository.save(customer);
+                LOGGER.info("CUSTOMER: address removed to customer successfully");
+                return customerDTOMapper.apply(customer);
+            }else{
+                LOGGER.error("CUSTOMER: the address doesn't exist, therefore is not possible make the operation");
+                return null;
+            }
+        }
     }
 
     private Address convertAddressRegistrationToAddressDTO(AddressRegistrationRequest addressRegistrationRequest){

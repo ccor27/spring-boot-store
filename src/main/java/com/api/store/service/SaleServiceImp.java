@@ -1,14 +1,10 @@
 package com.api.store.service;
 
-import com.api.store.model.Customer;
 import com.api.store.model.Product;
 import com.api.store.model.Sale;
-import com.api.store.model.dto.CustomerDTO;
 import com.api.store.model.dto.ProductDTO;
 import com.api.store.model.dto.SaleDTO;
 import com.api.store.model.dto.SaleRegistrationRequest;
-import com.api.store.repository.CustomerRepository;
-import com.api.store.repository.ProductRepository;
 import com.api.store.repository.SaleRepository;
 import com.api.store.service.mapper.SaleDTOMapper;
 import org.slf4j.Logger;
@@ -16,7 +12,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -65,6 +60,46 @@ public class SaleServiceImp implements ISaleService{
     @Override
     public Sale findSaleById(Long id){
         return saleRepository.findById(id) != null ? saleRepository.findById(id).get() : null;
+    }
+
+    @Override
+    public SaleDTO addProduct(Long id, ProductDTO productDTO) {
+       Sale sale = findSaleById(id);
+       if(sale!=null && productDTO!=null){
+           Product product = iProductService.findProductById(productDTO.id());
+           if(product!=null){
+               sale.getProducts().add(product);
+               saleRepository.save(sale);
+               LOGGER.info("SALE: the product added successfully");
+               return saleDTOMapper.apply(sale);
+           }else{
+               LOGGER.error("SALE: the product doesn't exist, therefore is not possible add it to the sale");
+               return null;
+           }
+       }else{
+           LOGGER.error("SALE: the sale or the product doesn't exist, therefore is not possible make the operation");
+           return null;
+       }
+    }
+
+    @Override
+    public SaleDTO removeProduct(Long id, ProductDTO productDTO) {
+        Sale sale = findSaleById(id);
+        if(sale!=null && productDTO!=null){
+            Product product = iProductService.findProductById(productDTO.id());
+            if(product!=null){
+                sale.getProducts().remove(product);
+                saleRepository.save(sale);
+                LOGGER.info("SALE: the product removed successfully");
+                return saleDTOMapper.apply(sale);
+            }else{
+                LOGGER.error("SALE: the product doesn't exist, therefore is not possible remove it to the sale");
+                return null;
+            }
+        }else{
+            LOGGER.error("SALE: the sale or the product doesn't exist, therefore is not possible make the operation");
+            return null;
+        }
     }
 
     public Set<Product> convertProductsDTOToProduct(Set<ProductDTO> productDTOS){

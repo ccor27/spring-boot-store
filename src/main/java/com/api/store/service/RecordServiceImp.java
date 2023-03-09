@@ -8,9 +8,7 @@ import com.api.store.model.dto.RecordDTO;
 import com.api.store.model.dto.RecordRegistrationRequest;
 import com.api.store.model.dto.SaleDTO;
 import com.api.store.repository.RecordRepository;
-import com.api.store.repository.SaleRepository;
 import com.api.store.service.mapper.RecordDTOMapper;
-import com.api.store.service.mapper.SaleDTOMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -51,12 +49,15 @@ public class RecordServiceImp implements IRecordService{
         recordRepository.save(record);
         recordDTO = recordDTOMapper.apply(record);
 
-        if(customer!=null)
+        if(customer!=null && customer.getRecord()==null) {
             iCustomerService.addRecord(recordDTO, customer.getId());
+            LOGGER.info("RECORD: record saved successfully: "+recordDTO.id());
+            return recordDTO;
+        }else{
+            LOGGER.error("RECORD: the customer already has a record, therefore is not possible add this record to the customer");
+            return null;
+        }
 
-
-        LOGGER.info("RECORD: record saved successfully: "+recordDTO.id());
-        return recordDTO;
     }
 
     @Override
@@ -83,7 +84,7 @@ public class RecordServiceImp implements IRecordService{
                return recordDTOMapper.apply(record);
            }).collect(Collectors.toSet());
        }
-        LOGGER.error("RECORD: not exist records");
+        LOGGER.error("RECORD: there aren't records");
         return null;
     }
 
@@ -100,10 +101,15 @@ public class RecordServiceImp implements IRecordService{
                 return false;
             }else{
 
-                record.addSale(sale);
-                recordRepository.saveAndFlush(record);
-                LOGGER.info("RECORD: added sale successfully");
-                return true;
+             if(!saleIsAlreadyInAnotherRecord(sale)){
+                 record.addSale(sale);
+                 recordRepository.saveAndFlush(record);
+                 LOGGER.info("RECORD: added sale successfully");
+                 return true;
+             }else{
+               LOGGER.error("RECORD: The sale is already in another record, therefore is not possible add it in the record");
+               return false;
+             }
             }
         }
 
@@ -139,6 +145,7 @@ public class RecordServiceImp implements IRecordService{
             LOGGER.info("RECORD: customer added successfully in a record");
             return recordDTOMapper.apply(record);
         }
+        LOGGER.error("RECORD: the record doesn't exist");
         return null;
     }
 
@@ -153,18 +160,18 @@ public class RecordServiceImp implements IRecordService{
                 LOGGER.info("RECORD: record updated successfully "+recordToUpdate.getId());
                 return recordDTOMapper.apply(recordToUpdate);
             }else{
-                LOGGER.error("RECORD: record with the id "+recordToUpdate.getId()+" doesn't exist");
+                LOGGER.error("RECORD: record doesn't exist");
                 return null;
             }
         }else{
-            LOGGER.error("RECORD: record with the id "+recordDTO.id()+" doesn't exit");
+            LOGGER.error("RECORD: record doesn't exit");
             return null;
         }
     }
 
     public Set<Sale> convertList(Set<SaleDTO>sales){
         if(sales.isEmpty() || sales==null){
-            LOGGER.error("RECORD: the sales doesn't exist");
+            LOGGER.error("RECORD: the sales to convert doesn't exist");
             return null;
         }else{
             LOGGER.info("RECORD: salesDTO converted to sale successfully");
@@ -176,5 +183,20 @@ public class RecordServiceImp implements IRecordService{
 
     private Customer findCustomer(Long id){
         return iCustomerService.findCustomerById(id)!=null ? iCustomerService.findCustomerById(id) : null;
+    }
+
+    private boolean saleIsAlreadyInAnotherRecord(Sale sale) {
+        boolean exist = false;
+        Set<Record> records = (Set<Record>) recordRepository.findAll();
+        if(records!=null){
+            for ( Record r :records ) {
+                if(r.getSaleSet().contains(sale)){
+                    exist=true;
+                    break;
+                }
+
+            }
+        }
+        return exist;
     }
 }

@@ -65,6 +65,15 @@ public class CustomerController {
         boolean isRemoved = iCustomerService.deleteSaleInRecord(saleDTO,id);
         return isRemoved ? new ResponseEntity<>(HttpStatus.OK) : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
-
+    @PutMapping("/{id}/add/address")
+    public ResponseEntity<CustomerDTO> addAddress(@RequestBody AddressRegistrationRequest addressRegistrationRequest, @PathVariable("id") Long id){
+          CustomerDTO customerDTO = iCustomerService.addAddress(addressRegistrationRequest,id);
+          return customerDTO!=null ? new ResponseEntity<>(customerDTO,HttpStatus.OK) : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @DeleteMapping("{id}/remove/address")
+    public ResponseEntity<CustomerDTO> removeAddress(@RequestBody AddressDTO addressDTO, @PathVariable("id") Long id){
+       CustomerDTO customerDTO = iCustomerService.removeAddress(addressDTO,id);
+       return customerDTO!=null ? new ResponseEntity<>(customerDTO,HttpStatus.OK) : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
 
 }

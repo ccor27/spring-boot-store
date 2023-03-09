@@ -11,7 +11,7 @@ public class Record {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @OneToOne(mappedBy = "record",cascade = CascadeType.ALL)
+    @OneToOne(mappedBy = "record",cascade = CascadeType.REFRESH)
     private Customer customer;
     @OneToMany(cascade = CascadeType.REFRESH)
     private Set<Sale> saleSet;

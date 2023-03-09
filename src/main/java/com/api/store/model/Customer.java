@@ -29,7 +29,16 @@ public class Customer extends Person{
         this.pwd = pwd;
         this.address = address;
         this.roles = roles;
-        this.record = new Record();
+        //this.record = new Record();
+    }
+    public Customer(String name, String lastName, String email, String phone, String username, String pwd,Set<Role> roles) {
+        super(name, lastName);
+        this.email = email;
+        this.phone = phone;
+        this.username = username;
+        this.pwd = pwd;
+        this.roles = roles;
+        //this.record = new Record();
     }
 
     public String getEmail() {

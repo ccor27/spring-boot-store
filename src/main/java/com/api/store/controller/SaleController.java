@@ -1,5 +1,6 @@
 package com.api.store.controller;
 
+import com.api.store.model.dto.ProductDTO;
 import com.api.store.model.dto.SaleDTO;
 import com.api.store.model.dto.SaleRegistrationRequest;
 import com.api.store.service.ISaleService;
@@ -42,5 +43,15 @@ public class SaleController {
         }else{
             return new ResponseEntity<>(HttpStatus.NO_CONTENT);
         }
+    }
+    @PutMapping("{id}/product")
+    public ResponseEntity<?> addProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productDTO){
+        SaleDTO saleDTO = iSaleService.addProduct(id,productDTO);
+        return saleDTO!=null ? new ResponseEntity<>(saleDTO,HttpStatus.OK) : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
+    }
+    @DeleteMapping("{id}/product")
+    public ResponseEntity<?> removeProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productDTO){
+        SaleDTO saleDTO = iSaleService.removeProduct(id,productDTO);
+        return saleDTO!=null ? new ResponseEntity<>(saleDTO,HttpStatus.OK) : new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
     }
 }
