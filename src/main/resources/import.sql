@@ -23,6 +23,7 @@ insert into product (name, description, price, amount, bar_code, origin) values 
 --create couple roles
 INSERT INTO role (authority) VALUES ('ADMIN')
 INSERT INTO role (authority) VALUES ('CUSTOMER')
+
 --create some address
 insert into address (street, country, zip_code, city, state) values ('2336 Mcguire Way', 'United States', '92619', 'Irvine', 'California');
 insert into address (street, country, zip_code, city, state) values ('39 Declaration Place', 'United States', '95113', 'San Jose', 'California');
@@ -66,6 +67,29 @@ insert into customer (name, last_name, email, phone, username, pwd) values ('Eth
 insert into customer (name, last_name, email, phone, username, pwd) values ('Ophelia', 'Badcock', 'obadcocki@intel.com', '964-286-3334', 'obadcocki', 'L42PeE');
 insert into customer (name, last_name, email, phone, username, pwd) values ('Nils', 'Romand', 'nromandj@dyndns.org', '382-361-1555', 'nromandj', 'OO74SWNNsl');
 UPDATE customer SET address_id=2 WHERE id = 1;
+insert into customer_roles (customer_id,roles_id) values (1,1)
+insert into customer_roles (customer_id,roles_id) values (2,2)
+insert into customer_roles (customer_id,roles_id) values (3,2)
+insert into customer_roles (customer_id,roles_id) values (4,2)
+insert into customer_roles (customer_id,roles_id) values (5,2)
+insert into customer_roles (customer_id,roles_id) values (6,2)
+insert into customer_roles (customer_id,roles_id) values (7,2)
+insert into customer_roles (customer_id,roles_id) values (8,2)
+insert into customer_roles (customer_id,roles_id) values (9,2)
+insert into customer_roles (customer_id,roles_id) values (10,2)
+insert into customer_roles (customer_id,roles_id) values (11,2)
+insert into customer_roles (customer_id,roles_id) values (12,2)
+insert into customer_roles (customer_id,roles_id) values (13,2)
+insert into customer_roles (customer_id,roles_id) values (14,2)
+insert into customer_roles (customer_id,roles_id) values (15,2)
+insert into customer_roles (customer_id,roles_id) values (16,2)
+insert into customer_roles (customer_id,roles_id) values (17,2)
+insert into customer_roles (customer_id,roles_id) values (18,2)
+insert into customer_roles (customer_id,roles_id) values (19,2)
+insert into customer_roles (customer_id,roles_id) values (20,2)
+
+
+
 
 --create sales
 insert into sale (concept, created_at, price) values ('In hac habitasse platea dictumst.', current_timestamp, 0);

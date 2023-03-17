@@ -1,9 +1,17 @@
 package com.api.store.model;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
+import java.util.Collection;
+import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
+
 @Entity
-public class Customer extends Person{
+public class Customer extends Person implements UserDetails {
 
     private String email;
     @Column(length = 12)
@@ -15,7 +23,7 @@ public class Customer extends Person{
     private String pwd;
     @OneToOne(cascade = CascadeType.ALL)
     private Address address;
-    @OneToMany(mappedBy = "id")
+    @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
 
 
@@ -65,8 +73,41 @@ public class Customer extends Person{
         this.record = record;
     }
 
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+
+        return (Collection<? extends GrantedAuthority>) roles.stream().map(role -> {
+            return new SimpleGrantedAuthority(role.getAuthority());
+        }).collect(Collectors.toSet());
+    }
+
+    @Override
+    public String getPassword() {
+        return pwd;
+    }
+
     public String getUsername() {
         return username;
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 
     public void setUsername(String username) {

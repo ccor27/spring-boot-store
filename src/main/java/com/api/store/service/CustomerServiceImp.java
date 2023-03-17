@@ -3,18 +3,25 @@ package com.api.store.service;
 import com.api.store.model.Address;
 import com.api.store.model.Customer;
 import com.api.store.model.Record;
+import com.api.store.model.Role;
 import com.api.store.model.dto.*;
 import com.api.store.repository.CustomerRepository;
+import com.api.store.repository.RoleRepository;
 import com.api.store.service.mapper.CustomerDTOMapper;
 import com.api.store.service.mapper.SaleDTOMapper;
 import org.apache.logging.slf4j.SLF4JLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
 import java.util.Set;
+import java.util.function.Supplier;
 import java.util.stream.Collectors;
 
 @Service
@@ -33,9 +40,23 @@ public class CustomerServiceImp implements ICustomerService{
     private IRecordService iRecordService;
     @Autowired
     private IAddressService iAddressService;
+    @Autowired
+    private RoleRepository roleRepository;
+    @Autowired
+    private PasswordEncoder passwordEncoder;
+    @Autowired
+    private JwtService jwtService;
+    @Autowired
+    private AuthenticationManager authenticationManager;
 
+
+    /**
+     * Method to create (register) a new customer
+     * @param customerRegistrationRequest
+     * @return
+     */
     @Override
-    public CustomerDTO save(CustomerRegistrationRequest customerRegistrationRequest) {
+    public CustomerAuthenticateResponse register(CustomerRegistrationRequest customerRegistrationRequest) {
         Customer customer = null;
 
         if(customerRegistrationRequest.address()!=null) {
@@ -45,7 +66,7 @@ public class CustomerServiceImp implements ICustomerService{
                     customerRegistrationRequest.email(),
                     customerRegistrationRequest.phone(),
                     customerRegistrationRequest.username(),
-                    customerRegistrationRequest.pwd(),
+                    passwordEncoder.encode(customerRegistrationRequest.pwd()),
                     convertAddressRegistrationToAddressDTO(customerRegistrationRequest.address()),
                     new HashSet<>()
             );
@@ -57,13 +78,35 @@ public class CustomerServiceImp implements ICustomerService{
                     customerRegistrationRequest.email(),
                     customerRegistrationRequest.phone(),
                     customerRegistrationRequest.username(),
-                    customerRegistrationRequest.pwd(),
+                    passwordEncoder.encode(customerRegistrationRequest.pwd()),
                     new HashSet<>()
             );
         }
+        //all customers will have the "customer" role
+        Role role = roleRepository.findById(1L).orElse(null);
+        customer.getRoles().add(role);
         customerRepository.save(customer);
+        LOGGER.info(customer.toString());
+        String jwToken = jwtService.generateToken(customer);
         LOGGER.info("CUSTOMER: customer creates successfully");
-        return customerDTOMapper.apply(customer);
+        return new CustomerAuthenticateResponse(jwToken);
+
+    }
+
+    @Override
+    public CustomerAuthenticateResponse authenticate(CustomerAuthentication customerAuthentication) {
+        LOGGER.info("Entro a authenticate");
+        String username =customerAuthentication.getUsername();
+        String password = customerAuthentication.getPassword();
+        authenticationManager.authenticate(
+                new UsernamePasswordAuthenticationToken(
+                        username,password
+                )
+        );
+        Customer customer = customerRepository.findByUsername(customerAuthentication.getUsername()).orElseThrow(() -> new UsernameNotFoundException("The username is incorrect"));
+        LOGGER.info(customer.toString());
+        String jwtToken = jwtService.generateToken(customer);
+        return new CustomerAuthenticateResponse(jwtToken);
     }
 
     @Override

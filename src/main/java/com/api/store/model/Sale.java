@@ -1,9 +1,5 @@
 package com.api.store.model;
-
-import com.sun.istack.NotNull;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
