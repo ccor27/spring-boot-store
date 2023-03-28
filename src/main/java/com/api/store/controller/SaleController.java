@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/sale")
+@RequestMapping("/api/v1/sale")
 public class SaleController {
     @Autowired
     private ISaleService iSaleService;

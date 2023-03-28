@@ -25,8 +25,8 @@ public class Customer extends Person implements UserDetails {
     private Address address;
     @ManyToMany(fetch = FetchType.EAGER)
     private Set<Role> roles;
-
-
+    @OneToMany(mappedBy = "customer")
+    private Set<Token> tokens;
     public Customer() {}
 
     public Customer(String name, String lastName, String email, String phone, String username, String pwd, Address address, Set<Role> roles) {
@@ -47,6 +47,14 @@ public class Customer extends Person implements UserDetails {
         this.pwd = pwd;
         this.roles = roles;
         //this.record = new Record();
+    }
+
+    public Set<Token> getTokens() {
+        return tokens;
+    }
+
+    public void setTokens(Set<Token> tokens) {
+        this.tokens = tokens;
     }
 
     public String getEmail() {

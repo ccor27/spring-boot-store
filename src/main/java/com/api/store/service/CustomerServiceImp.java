@@ -1,12 +1,11 @@
 package com.api.store.service;
 
-import com.api.store.model.Address;
-import com.api.store.model.Customer;
+import com.api.store.model.*;
 import com.api.store.model.Record;
-import com.api.store.model.Role;
 import com.api.store.model.dto.*;
 import com.api.store.repository.CustomerRepository;
 import com.api.store.repository.RoleRepository;
+import com.api.store.repository.TokenRepository;
 import com.api.store.service.mapper.CustomerDTOMapper;
 import com.api.store.service.mapper.SaleDTOMapper;
 import org.apache.logging.slf4j.SLF4JLogger;
@@ -20,6 +19,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
@@ -43,6 +43,8 @@ public class CustomerServiceImp implements ICustomerService{
     @Autowired
     private RoleRepository roleRepository;
     @Autowired
+    private TokenRepository tokenRepository;
+    @Autowired
     private PasswordEncoder passwordEncoder;
     @Autowired
     private JwtService jwtService;
@@ -60,7 +62,7 @@ public class CustomerServiceImp implements ICustomerService{
         Customer customer = null;
 
         if(customerRegistrationRequest.address()!=null) {
-                    customer = new Customer(
+            customer = new Customer(
                     customerRegistrationRequest.name(),
                     customerRegistrationRequest.lastName(),
                     customerRegistrationRequest.email(),
@@ -82,14 +84,15 @@ public class CustomerServiceImp implements ICustomerService{
                     new HashSet<>()
             );
         }
-        //all customers will have the "customer" role
+
         Role role = roleRepository.findById(1L).orElse(null);
         customer.getRoles().add(role);
         customerRepository.save(customer);
         LOGGER.info(customer.toString());
-        String jwToken = jwtService.generateToken(customer);
+        String jwtToken = jwtService.generateToken(customer);
+        saveCustomerToken(customer, jwtToken);
         LOGGER.info("CUSTOMER: customer creates successfully");
-        return new CustomerAuthenticateResponse(jwToken);
+        return new CustomerAuthenticateResponse(jwtToken);
 
     }
 
@@ -106,6 +109,8 @@ public class CustomerServiceImp implements ICustomerService{
         Customer customer = customerRepository.findByUsername(customerAuthentication.getUsername()).orElseThrow(() -> new UsernameNotFoundException("The username is incorrect"));
         LOGGER.info(customer.toString());
         String jwtToken = jwtService.generateToken(customer);
+        revokeAllCustomerTokens(customer);
+        saveCustomerToken(customer, jwtToken);
         return new CustomerAuthenticateResponse(jwtToken);
     }
 
@@ -143,6 +148,19 @@ public class CustomerServiceImp implements ICustomerService{
     @Override
     public Set<CustomerDTO> findAll() {
         LOGGER.info("CUSTOMER: customers found successfully");
+        /**
+         * yv3ZhL
+         * eH5WfS5Np
+         * ocqca8
+         * lPeVnRhtf
+         * 29XuVogKMiA
+         */
+        LOGGER.info("PASSWORD TO "+passwordEncoder.encode("yv3ZhL"));
+        LOGGER.info("PASSWORD TO "+passwordEncoder.encode("eH5WfS5Np"));
+        LOGGER.info("PASSWORD TO "+passwordEncoder.encode("ocqca8"));
+        LOGGER.info("PASSWORD TO "+passwordEncoder.encode("lPeVnRhtf"));
+        LOGGER.info("PASSWORD TO "+passwordEncoder.encode("29XuVogKMiA"));
+
         return customerRepository.findAll().stream().map(customer -> {
             return customerDTOMapper.apply(customer);
         }).collect(Collectors.toSet());
@@ -307,6 +325,26 @@ public class CustomerServiceImp implements ICustomerService{
                 return null;
             }
         }
+    }
+    private void saveCustomerToken(Customer customer, String jwtToken) {
+        Token token = new Token(
+                jwtToken,
+                TokenType.BEARER,
+                false,
+                false,
+                customer
+        );
+        tokenRepository.save(token);
+    }
+    private void revokeAllCustomerTokens(Customer customer){
+        List<Token> validCustomerTokens = tokenRepository.findAllValidTokenByCustomer(customer.getId());
+        if(validCustomerTokens.isEmpty())
+            return;
+        validCustomerTokens.forEach(t->{
+            t.setExpired(true);
+            t.setRevoked(true);
+        });
+        tokenRepository.saveAll(validCustomerTokens);
     }
 
     private Address convertAddressRegistrationToAddressDTO(AddressRegistrationRequest addressRegistrationRequest){

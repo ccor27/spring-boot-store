@@ -1,5 +1,6 @@
 package com.api.store.config;
 
+import com.api.store.repository.TokenRepository;
 import com.api.store.service.JwtService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -26,6 +27,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     private JwtService jwtService;
     @Autowired
     private UserDetailsService userDetailsService;
+    @Autowired
+    private TokenRepository tokenRepository;
 
     @Override
     protected void doFilterInternal(
@@ -45,7 +48,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         username= jwtService.extractUsername(jwt);
         if(username!=null && SecurityContextHolder.getContext().getAuthentication() == null){// no esta en el context o validado aun
             UserDetails userDetails = this.userDetailsService.loadUserByUsername(username);
-            if(jwtService.tokenValid(jwt,userDetails)){
+            boolean isTokenValid = tokenRepository.findByToken(jwt)
+                    .map(token -> !token.isExpired() && !token.isRevoked())
+                    .orElse(false);
+            if(jwtService.tokenValid(jwt,userDetails) && isTokenValid){
                 UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,
@@ -56,8 +62,8 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                 );
                 SecurityContextHolder.getContext().setAuthentication(authToken);
             }
-
-            filterChain.doFilter(request,response);
         }
+
+        filterChain.doFilter(request,response);
     }
 }
