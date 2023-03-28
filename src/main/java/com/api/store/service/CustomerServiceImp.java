@@ -98,7 +98,7 @@ public class CustomerServiceImp implements ICustomerService{
 
     @Override
     public CustomerAuthenticateResponse authenticate(CustomerAuthentication customerAuthentication) {
-        LOGGER.info("Entro a authenticate");
+
         String username =customerAuthentication.getUsername();
         String password = customerAuthentication.getPassword();
         authenticationManager.authenticate(
@@ -155,11 +155,6 @@ public class CustomerServiceImp implements ICustomerService{
          * lPeVnRhtf
          * 29XuVogKMiA
          */
-        LOGGER.info("PASSWORD TO "+passwordEncoder.encode("yv3ZhL"));
-        LOGGER.info("PASSWORD TO "+passwordEncoder.encode("eH5WfS5Np"));
-        LOGGER.info("PASSWORD TO "+passwordEncoder.encode("ocqca8"));
-        LOGGER.info("PASSWORD TO "+passwordEncoder.encode("lPeVnRhtf"));
-        LOGGER.info("PASSWORD TO "+passwordEncoder.encode("29XuVogKMiA"));
 
         return customerRepository.findAll().stream().map(customer -> {
             return customerDTOMapper.apply(customer);
