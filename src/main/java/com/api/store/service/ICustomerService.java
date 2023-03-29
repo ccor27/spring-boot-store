@@ -1,8 +1,6 @@
 package com.api.store.service;
 
 import com.api.store.model.Customer;
-import com.api.store.model.Record;
-import com.api.store.model.Sale;
 import com.api.store.model.dto.*;
 
 import java.util.Set;
@@ -10,7 +8,8 @@ import java.util.Set;
 
 public interface ICustomerService {
 
-    public CustomerDTO save(CustomerRegistrationRequest customerRegistrationRequest);
+    public CustomerAuthenticateResponse register(CustomerRegistrationRequest customerRegistrationRequest);
+    public CustomerAuthenticateResponse authenticate(CustomerAuthentication customerAuthentication);
     public CustomerDTO findById(Long id);
     public CustomerDTO updateInfo(CustomerUpdateRequest customerUpdateRequest);
     public Set<CustomerDTO> findAll();

@@ -1,9 +1,6 @@
 package com.api.store.model;
 
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import jakarta.persistence.*;
 @Entity
 public class Role {
     @Id
@@ -14,6 +11,7 @@ public class Role {
     public Role(String authority) {
         this.authority = authority;
     }
+    public Role(){}
 
     public Long getId() {
         return id;

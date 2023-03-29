@@ -23,50 +23,26 @@ insert into product (name, description, price, amount, bar_code, origin) values 
 --create couple roles
 INSERT INTO role (authority) VALUES ('ADMIN')
 INSERT INTO role (authority) VALUES ('CUSTOMER')
+
 --create some address
 insert into address (street, country, zip_code, city, state) values ('2336 Mcguire Way', 'United States', '92619', 'Irvine', 'California');
 insert into address (street, country, zip_code, city, state) values ('39 Declaration Place', 'United States', '95113', 'San Jose', 'California');
 insert into address (street, country, zip_code, city, state) values ('5666 Darwin Crossing', 'United States', '33915', 'Cape Coral', 'Florida');
 insert into address (street, country, zip_code, city, state) values ('868 Rockefeller Circle', 'United States', '44760', 'Canton', 'Ohio');
 insert into address (street, country, zip_code, city, state) values ('9085 Northwestern Drive', 'United States', '21229', 'Baltimore', 'Maryland');
-insert into address (street, country, zip_code, city, state) values ('964 Nelson Court', 'United States', '32808', 'Orlando', 'Florida');
-insert into address (street, country, zip_code, city, state) values ('9 Melvin Park', 'United States', '40215', 'Louisville', 'Kentucky');
-insert into address (street, country, zip_code, city, state) values ('24 Hermina Trail', 'United States', '85067', 'Phoenix', 'Arizona');
-insert into address (street, country, zip_code, city, state) values ('00724 Fieldstone Junction', 'United States', '33436', 'Boynton Beach', 'Florida');
-insert into address (street, country, zip_code, city, state) values ('80 Victoria Court', 'United States', '20319', 'Washington', 'District of Columbia');
-insert into address (street, country, zip_code, city, state) values ('9 Hazelcrest Street', 'United States', '30311', 'Atlanta', 'Georgia');
-insert into address (street, country, zip_code, city, state) values ('023 Anthes Crossing', 'United States', '99210', 'Spokane', 'Washington');
-insert into address (street, country, zip_code, city, state) values ('78172 Russell Crossing', 'United States', '77228', 'Houston', 'Texas');
-insert into address (street, country, zip_code, city, state) values ('83 Moulton Trail', 'United States', '92165', 'San Diego', 'California');
-insert into address (street, country, zip_code, city, state) values ('7633 Donald Point', 'United States', '10039', 'New York City', 'New York');
-insert into address (street, country, zip_code, city, state) values ('646 Bartillon Way', 'United States', '08650', 'Trenton', 'New Jersey');
-insert into address (street, country, zip_code, city, state) values ('61 Johnson Place', 'United States', '31136', 'Atlanta', 'Georgia');
-insert into address (street, country, zip_code, city, state) values ('4460 Magdeline Park', 'United States', '75210', 'Dallas', 'Texas');
-insert into address (street, country, zip_code, city, state) values ('69267 Nelson Drive', 'United States', '10024', 'New York City', 'New York');
-insert into address (street, country, zip_code, city, state) values ('54695 Vernon Way', 'United States', '94263', 'Sacramento', 'California');
 --create a customer and add an address
-insert into customer (name, last_name, email, phone, username, pwd) values ('Archaimbaud', 'Kadwallider', 'akadwallider0@wiley.com', '690-812-7428', 'akadwallider0', 'yv3ZhL');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Juliet', 'Jay', 'jjay1@nymag.com', '103-128-7608', 'jjay1', 'eH5WfS5Np');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Mufinella', 'Daily', 'mdaily2@rambler.ru', '897-795-5473', 'mdaily2', 'ocqca8');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Nevins', 'Hempshall', 'nhempshall3@accuweather.com', '594-211-9790', 'nhempshall3', 'lPeVnRhtf');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Octavius', 'Keyho', 'okeyho4@discuz.net', '433-284-6145', 'okeyho4', '29XuVogKMiA');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Evan', 'Buck', 'ebuck5@ebay.co.uk', '973-263-0678', 'ebuck5', 'dTEXpwAax27');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Ilysa', 'Bhar', 'ibhar6@cornell.edu', '649-912-3907', 'ibhar6', 'ivlsj0MF');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Anabella', 'Jellybrand', 'ajellybrand7@jimdo.com', '228-772-0262', 'ajellybrand7', '2NcLppAPE8J');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Clementius', 'Helliar', 'chelliar8@mozilla.org', '358-138-8304', 'chelliar8', 'NhmVZi');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Ronna', 'Campbell-Dunlop', 'rcampbelldunlop9@deviantart.com', '635-339-2221', 'rcampbelldunlop9', '7VvpDih2L8G');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Leonardo', 'Byres', 'lbyresa@amazon.de', '443-377-0545', 'lbyresa', 'tfNdFSqsMOI');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Aguste', 'Buxy', 'abuxyb@woothemes.com', '832-979-0026', 'abuxyb', 'RloJ3kDTr6');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Tresa', 'Glasman', 'tglasmanc@gov.uk', '165-794-7605', 'tglasmanc', 'Md3f2Y3s');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Abner', 'Lonergan', 'alonergand@usda.gov', '204-543-4621', 'alonergand', 'XsOcxlev');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Tera', 'Hugk', 'thugke@chronoengine.com', '409-463-4108', 'thugke', 'dr6Kurm');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Merola', 'Burkin', 'mburkinf@smugmug.com', '924-728-3246', 'mburkinf', 'cBWYVqe');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Milty', 'Brunke', 'mbrunkeg@nature.com', '337-759-3222', 'mbrunkeg', 'nk43V6okOrO');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Ethelbert', 'Souten', 'esoutenh@dot.gov', '576-355-8306', 'esoutenh', 'H6eP7iMYk');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Ophelia', 'Badcock', 'obadcocki@intel.com', '964-286-3334', 'obadcocki', 'L42PeE');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Nils', 'Romand', 'nromandj@dyndns.org', '382-361-1555', 'nromandj', 'OO74SWNNsl');
-UPDATE customer SET address_id=2 WHERE id = 1;
+insert into customer (name, last_name, email, phone, username, pwd) values ('Archaimbaud', 'Kadwallider', 'akadwallider0@wiley.com', '690-812-7428', 'akadwallider0', '$2a$10$S22x3Jtu9cRyu.zMObhN0.AW9ZdK6jHUbHrj5sTpslqDUjUY1oVTy');
+insert into customer (name, last_name, email, phone, username, pwd) values ('Juliet', 'Jay', 'jjay1@nymag.com', '103-128-7608', 'jjay1', '$2a$10$3ccRhUrDxVaRgjDHZ8Pc0ejDv9se7jqxavjDNEkalgQKXYZiqMptq');
+insert into customer (name, last_name, email, phone, username, pwd) values ('Mufinella', 'Daily', 'mdaily2@rambler.ru', '897-795-5473', 'mdaily2', '$2a$10$mfEodDi8Nal7kgV3WZl5g.lFNfioQ3DYhuss.UChWWXncUEhPeznK');
+insert into customer (name, last_name, email, phone, username, pwd) values ('Nevins', 'Hempshall', 'nhempshall3@accuweather.com', '594-211-9790', 'nhempshall3', '$2a$10$1jDkOW8M.v11yPjQW.mGmOrwp8NXDL9XA6mZbmA2UrDzSugEcAXhy');
+insert into customer (name, last_name, email, phone, username, pwd) values ('Octavius', 'Keyho', 'okeyho4@discuz.net', '433-284-6145', 'okeyho4', '$2a$10$cvugr9JtpECScHxlZhwpS.sm8TnUk2UJWQXBPkRxeWXodw7qDeUS2');
 
+insert into customer_roles (customer_id,roles_id) values (1,1)
+insert into customer_roles (customer_id,roles_id) values (1,2)
+insert into customer_roles (customer_id,roles_id) values (2,2)
+insert into customer_roles (customer_id,roles_id) values (3,2)
+insert into customer_roles (customer_id,roles_id) values (4,2)
+insert into customer_roles (customer_id,roles_id) values (5,2)
 --create sales
 insert into sale (concept, created_at, price) values ('In hac habitasse platea dictumst.', current_timestamp, 0);
 insert into sale (concept, created_at, price) values ('Nullam sit amet turpis elementum ligula vehicula consequat.', current_timestamp, 0);
@@ -79,7 +55,6 @@ insert into sale (concept, created_at, price) values ('Donec ut dolor.', current
 insert into sale (concept, created_at, price) values ('Suspendisse ornare consequat lectus.',current_timestamp, 0);
 insert into sale (concept, created_at, price) values ('Sed sagittis.', current_timestamp, 0);
 --add products in the sale
-
 insert into sale_products (sale_id, products_id) values (4, 7);
 insert into sale_products (sale_id, products_id) values (4, 8);
 insert into sale_products (sale_id, products_id) values (7, 14);

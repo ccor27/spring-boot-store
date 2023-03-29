@@ -11,19 +11,10 @@ import java.util.Set;
 
 @RestController
 //@Controller
-@RequestMapping("/customer")
+@RequestMapping("/api/v1/customer")
 public class CustomerController {
     @Autowired
     private ICustomerService iCustomerService;
-    @PostMapping("/save")
-    public ResponseEntity<CustomerDTO> save(@RequestBody CustomerRegistrationRequest customerRegistrationRequest){
-        CustomerDTO customerDTO = iCustomerService.save(customerRegistrationRequest);
-        if(customerDTO!=null){
-            return new ResponseEntity<>(customerDTO, HttpStatus.CREATED);
-        }else{
-            return new ResponseEntity<>(HttpStatus.INTERNAL_SERVER_ERROR);
-        }
-    }
     @GetMapping("/find/{id}")
     public ResponseEntity<CustomerDTO> findById(@PathVariable("id") Long id){
         CustomerDTO customerDTO = iCustomerService.findById(id);

@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Set;
 
 @RestController
-@RequestMapping("/record")
+@RequestMapping("/api/v1/record")
 public class RecordController {
     @Autowired
     private IRecordService iRecordService;
