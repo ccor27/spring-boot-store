@@ -31,11 +31,11 @@ insert into address (street, country, zip_code, city, state) values ('5666 Darwi
 insert into address (street, country, zip_code, city, state) values ('868 Rockefeller Circle', 'United States', '44760', 'Canton', 'Ohio');
 insert into address (street, country, zip_code, city, state) values ('9085 Northwestern Drive', 'United States', '21229', 'Baltimore', 'Maryland');
 --create a customer and add an address
-insert into customer (name, last_name, email, phone, username, pwd) values ('Archaimbaud', 'Kadwallider', 'akadwallider0@wiley.com', '690-812-7428', 'akadwallider0', '$2a$10$S22x3Jtu9cRyu.zMObhN0.AW9ZdK6jHUbHrj5sTpslqDUjUY1oVTy');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Juliet', 'Jay', 'jjay1@nymag.com', '103-128-7608', 'jjay1', '$2a$10$3ccRhUrDxVaRgjDHZ8Pc0ejDv9se7jqxavjDNEkalgQKXYZiqMptq');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Mufinella', 'Daily', 'mdaily2@rambler.ru', '897-795-5473', 'mdaily2', '$2a$10$mfEodDi8Nal7kgV3WZl5g.lFNfioQ3DYhuss.UChWWXncUEhPeznK');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Nevins', 'Hempshall', 'nhempshall3@accuweather.com', '594-211-9790', 'nhempshall3', '$2a$10$1jDkOW8M.v11yPjQW.mGmOrwp8NXDL9XA6mZbmA2UrDzSugEcAXhy');
-insert into customer (name, last_name, email, phone, username, pwd) values ('Octavius', 'Keyho', 'okeyho4@discuz.net', '433-284-6145', 'okeyho4', '$2a$10$cvugr9JtpECScHxlZhwpS.sm8TnUk2UJWQXBPkRxeWXodw7qDeUS2');
+insert into customer (name, last_name, email, phone, username, pwd,address_id) values ('Archaimbaud', 'Kadwallider', 'akadwallider0@wiley.com', '690-812-7428', 'akadwallider0', '$2a$10$S22x3Jtu9cRyu.zMObhN0.AW9ZdK6jHUbHrj5sTpslqDUjUY1oVTy',1);
+insert into customer (name, last_name, email, phone, username, pwd,address_id) values ('Juliet', 'Jay', 'jjay1@nymag.com', '103-128-7608', 'jjay1', '$2a$10$3ccRhUrDxVaRgjDHZ8Pc0ejDv9se7jqxavjDNEkalgQKXYZiqMptq',2);
+insert into customer (name, last_name, email, phone, username, pwd,address_id) values ('Mufinella', 'Daily', 'mdaily2@rambler.ru', '897-795-5473', 'mdaily2', '$2a$10$mfEodDi8Nal7kgV3WZl5g.lFNfioQ3DYhuss.UChWWXncUEhPeznK',3);
+insert into customer (name, last_name, email, phone, username, pwd,address_id) values ('Nevins', 'Hempshall', 'nhempshall3@accuweather.com', '594-211-9790', 'nhempshall3', '$2a$10$1jDkOW8M.v11yPjQW.mGmOrwp8NXDL9XA6mZbmA2UrDzSugEcAXhy',4);
+insert into customer (name, last_name, email, phone, username, pwd,address_id) values ('Octavius', 'Keyho', 'okeyho4@discuz.net', '433-284-6145', 'okeyho4', '$2a$10$cvugr9JtpECScHxlZhwpS.sm8TnUk2UJWQXBPkRxeWXodw7qDeUS2',5);
 
 insert into customer_roles (customer_id,roles_id) values (1,1)
 insert into customer_roles (customer_id,roles_id) values (1,2)
@@ -49,36 +49,22 @@ insert into sale (concept, created_at, price) values ('Nullam sit amet turpis el
 insert into sale (concept, created_at, price) values ('Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus.', current_timestamp, 0);
 insert into sale (concept, created_at, price) values ('Nullam porttitor lacus at turpis.', current_timestamp, 0);
 insert into sale (concept, created_at, price) values ('Nunc purus.', current_timestamp, 0);
-insert into sale (concept, created_at, price) values ('Ut at dolor quis odio consequat varius.', current_timestamp, 0);
-insert into sale (concept, created_at, price) values ('Duis bibendum.', current_timestamp, 0);
-insert into sale (concept, created_at, price) values ('Donec ut dolor.', current_timestamp, 0);
-insert into sale (concept, created_at, price) values ('Suspendisse ornare consequat lectus.',current_timestamp, 0);
-insert into sale (concept, created_at, price) values ('Sed sagittis.', current_timestamp, 0);
 --add products in the sale
-insert into sale_products (sale_id, products_id) values (4, 7);
-insert into sale_products (sale_id, products_id) values (4, 8);
-insert into sale_products (sale_id, products_id) values (7, 14);
-
-
-
 insert into sale_products (sale_id, products_id) values (1, 1);
 insert into sale_products (sale_id, products_id) values (1, 2);
 insert into sale_products (sale_id, products_id) values (2, 3);
 insert into sale_products (sale_id, products_id) values (2, 4);
 insert into sale_products (sale_id, products_id) values (3, 5);
 insert into sale_products (sale_id, products_id) values (3, 6);
-
-
+insert into sale_products (sale_id, products_id) values (4, 7);
+insert into sale_products (sale_id, products_id) values (4, 8);
 insert into sale_products (sale_id, products_id) values (5, 9);
 insert into sale_products (sale_id, products_id) values (5, 10);
-insert into sale_products (sale_id, products_id) values (6, 11);
-insert into sale_products (sale_id, products_id) values (6, 12);
-insert into sale_products (sale_id, products_id) values (7, 13);
-
-insert into sale_products (sale_id, products_id) values (8, 15);
-insert into sale_products (sale_id, products_id) values (8, 16);
-insert into sale_products (sale_id, products_id) values (9, 17);
-insert into sale_products (sale_id, products_id) values (9, 18);
-insert into sale_products (sale_id, products_id) values (10, 19);
-insert into sale_products (sale_id, products_id) values (10, 20);
+--create record
+insert into record default values;
+--add sale
+insert into record_sale_set (record_id,sale_set_id) values (1,1);
+insert into record_sale_set (record_id,sale_set_id) values (1,2);
+--add record into customer
+update customer set record_id=1 where id=1;
 

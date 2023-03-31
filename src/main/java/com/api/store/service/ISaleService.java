@@ -16,4 +16,5 @@ public interface ISaleService {
     public Sale findSaleById(Long id);
     public SaleDTO addProduct(Long id, ProductDTO productDTO);
     public SaleDTO removeProduct(Long id, ProductDTO productDTO);
+
 }

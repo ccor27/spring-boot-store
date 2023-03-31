@@ -10,10 +10,12 @@ import org.apache.logging.slf4j.SLF4JLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
 import java.util.stream.Collectors;
+
 
 @Service
 public class ProductServiceImp implements IProductService{
@@ -83,5 +85,26 @@ public class ProductServiceImp implements IProductService{
     @Override
     public Product findProductById(Long id) {
         return productRepository.findById(id).isPresent() ? productRepository.findById(id).get() : null;
+    }
+
+    @Override
+    public boolean deleteProduct(Long id) {
+        Product p = findProductById(id);
+        if(productRepository!=null){
+            productRepository.delete(p);
+            return true;
+        }else{
+            return false;
+        }
+    }
+    @Override
+    public boolean validateAndModifyAmountOfProduct(Product product,int amount){//already is validated of the product exist
+        if(product.getAmount()>=amount){
+            product.setAmount(product.getAmount()-amount);
+            productRepository.save(product);
+            return true;
+        }else{
+            return false;
+        }
     }
 }

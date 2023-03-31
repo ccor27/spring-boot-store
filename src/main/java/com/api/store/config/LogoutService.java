@@ -14,6 +14,12 @@ public class LogoutService implements LogoutHandler {
     @Autowired
     private TokenRepository tokenRepository;
 
+    /**
+     * Method to invalidate a customer's token (make logout)
+     * @param request
+     * @param response
+     * @param authentication
+     */
     @Override
     public void logout(
             HttpServletRequest request,

@@ -30,6 +30,15 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     @Autowired
     private TokenRepository tokenRepository;
 
+    /**
+     * Method to manage the request that the customer does (authentication).
+     * Also, here the tokens are validate
+     * @param request
+     * @param response
+     * @param filterChain
+     * @throws ServletException
+     * @throws IOException
+     */
     @Override
     protected void doFilterInternal(
         @NonNull HttpServletRequest request,

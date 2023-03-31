@@ -15,10 +15,12 @@ public interface ICustomerService {
     public Set<CustomerDTO> findAll();
     public Customer findCustomerById(Long id);
     public CustomerDTO addRecord(RecordDTO record, Long id);
+    public RecordDTO findRecordCustomer(Long id);
     public boolean addSaleInRecord(SaleDTO saleDTO,Long id);
     public boolean deleteSaleInRecord(SaleDTO saleDTO, Long id);
     public CustomerDTO addAddress(AddressRegistrationRequest addressRegistrationRequest, Long id);
     public CustomerDTO removeAddress(AddressDTO addressDTO, Long id);
+    public AddressDTO findAddressCustomer(Long id);
 
 }
 

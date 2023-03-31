@@ -20,6 +20,14 @@ public class SecurityConfig {
     private AuthenticationProvider authenticationProvider;
     @Autowired
     private LogoutService logoutService;
+
+    /**
+     * Method where the program allow some urls without needed to authentication.
+     * Also, here configure some classes that will manage the authentication, filters and logout
+     * @param http
+     * @return
+     * @throws Exception
+     */
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception{
 
@@ -27,7 +35,7 @@ public class SecurityConfig {
                 .csrf()
                 .disable()
                 .authorizeHttpRequests()
-                 .requestMatchers("/api/v1/auth/customer/**")
+                 .requestMatchers("/api/v1/auth/customer/**","/swagger-ui/**","/v3/api-docs/**")
                 .permitAll()
                 .anyRequest()
                 .authenticated()

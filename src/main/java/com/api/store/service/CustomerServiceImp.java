@@ -101,11 +101,11 @@ public class CustomerServiceImp implements ICustomerService{
 
         String username =customerAuthentication.getUsername();
         String password = customerAuthentication.getPassword();
-        authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(
-                        username,password
-                )
-        );
+            authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(
+                            username,password
+                    )
+            );
         Customer customer = customerRepository.findByUsername(customerAuthentication.getUsername()).orElseThrow(() -> new UsernameNotFoundException("The username is incorrect"));
         LOGGER.info(customer.toString());
         String jwtToken = jwtService.generateToken(customer);
@@ -175,8 +175,7 @@ public class CustomerServiceImp implements ICustomerService{
 
     /**
      *
-     * This method can be called by CustomerController or RecordServiceImp
-     * The function of this method is make the relationship between customer and record
+     *
      * @param recordDTO
      * @param id
      * @return
@@ -189,39 +188,40 @@ public class CustomerServiceImp implements ICustomerService{
      if(record!=null){
 
          Customer customer = customerRepository.findById(id).orElse(null);
-
-         if(record.getCustomer()!=null){ // it's mean that the call was made for the RecordServiceImp
-
-             if(customer!=null){
-                 customer.setRecord(record);
-                 customerRepository.save(customer);
-                 LOGGER.info("CUSTOMER: the record was added successfully into the customer");
-                 return customerDTOMapper.apply(customer);
-             }else {
-                 LOGGER.error("CUSTOMER: the customer doesn't exist, therefore is not possible add it the record");
-                 return null;
-             }
-         }else{ // it's mean that the call was made for the CustomerController
-
-
-             if(customer!=null){
-                 customer.setRecord(record);
-                 iRecordService.addCustomer(record.getId(), customerDTOMapper.apply(customer));
-                 customerRepository.save(customer);
-                 LOGGER.info("CUSTOMER: the record was added successfully into the customer");
-                 return customerDTOMapper.apply(customer);
-             }else {
-                 LOGGER.error("CUSTOMER: the customer doesn't exist, therefore is not possible add it the record");
-                 return null;
-             }
+         if(!haveRecordCustomer(record) && customer!=null){
+             customer.setRecord(record);
+             customerRepository.save(customer);
+             LOGGER.info("CUSTOMER: record added successfully");
+             return customerDTOMapper.apply(customer);
+         }else {
+             LOGGER.error("CUSTOMER: record have already a customer or the customer doesn't exist, therefore the relationship is impossible");
+             return null;
          }
-
      }else{
-
          LOGGER.error("CUSTOMER: the record doesn't exist, therefore is not possible add it make this operation");
          return null;
      }
+    }
 
+    private boolean haveRecordCustomer(Record record) {
+        return record.getCustomer()!=null?true:false;
+    }
+
+    @Override
+    public RecordDTO findRecordCustomer(Long id) {
+        Customer customer = findCustomerById(id);
+        if(customer!=null){
+            if(customer.getRecord()!=null){
+                LOGGER.info("CUSTOMER: record found successfully");
+                return iRecordService.findById(customer.getRecord().getId());
+            }else {
+                LOGGER.error("CUSTOMER: there isn't a record in the customer");
+                return null;
+            }
+        }else{
+            LOGGER.error("CUSTOMER: the customer doesn't exist");
+            return null;
+        }
     }
 
 
@@ -306,7 +306,7 @@ public class CustomerServiceImp implements ICustomerService{
     public CustomerDTO removeAddress(AddressDTO addressDTO, Long id) {
         Customer customer = findCustomerById(id);
         if(customer==null){
-            LOGGER.error("CUSTOMER: the customer doesn't exist or the address send is null, therefore is not possible make the operation");
+            LOGGER.error("CUSTOMER: the customer doesn't exist, therefore is not possible make the operation");
             return null;
         }else{
             Address address = iAddressService.findAddressById(addressDTO.id());
@@ -321,6 +321,23 @@ public class CustomerServiceImp implements ICustomerService{
             }
         }
     }
+    @Override
+    public AddressDTO findAddressCustomer(Long id) {
+        Customer customer = findCustomerById(id);
+        if(customer!=null){
+            if(customer.getAddress()!=null){
+                LOGGER.info("CUSTOMER: customer's address found successfully");
+                return iAddressService.findById(customer.getAddress().getId());
+            }else{
+                LOGGER.error("CUSTOMER: the customer doesn't have an address");
+                return null;
+            }
+        }else {
+            LOGGER.error("CUSTOMER: the customer doesn't exist");
+            return null;
+        }
+    }
+
     private void saveCustomerToken(Customer customer, String jwtToken) {
         Token token = new Token(
                 jwtToken,

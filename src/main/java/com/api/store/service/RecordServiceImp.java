@@ -14,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -30,33 +31,32 @@ public class RecordServiceImp implements IRecordService{
     @Autowired
     private ICustomerService iCustomerService;
 
+    /**
+     * Method to save a new record
+     * if the recordDto bring a customer within it, the method validate if that customer
+     * already have a record. It to avoid that several customer have the same record or vice versa
+     * @param recordRegistrationRequest
+     * @return
+     */
     @Override
     public RecordDTO save(RecordRegistrationRequest recordRegistrationRequest) {
 
         Customer customer = null;
-        RecordDTO recordDTO = null;
-        Record record = null;
+        Record record;
 
         if(recordRegistrationRequest.customerDTO()!=null)
             customer = findCustomer(recordRegistrationRequest.customerDTO().id());
 
-        if(customer!=null){
+        if(customer!=null && !haveCustomerRecord(customer)){
             record = new Record(customer,convertList(recordRegistrationRequest.saleDTOS()));
+            customer.setRecord(record);// make the refresh in the owner side to update automatically the database
         }else{
+            LOGGER.info("RECORD: the customer have already a record, therefore this record cannot have this customer");
             record = new Record(convertList(recordRegistrationRequest.saleDTOS()));
         }
 
         recordRepository.save(record);
-        recordDTO = recordDTOMapper.apply(record);
-
-        if(customer!=null && customer.getRecord()==null) {
-            iCustomerService.addRecord(recordDTO, customer.getId());
-            LOGGER.info("RECORD: record saved successfully: "+recordDTO.id());
-            return recordDTO;
-        }else{
-            LOGGER.error("RECORD: the customer already has a record, therefore is not possible add this record to the customer");
-            return null;
-        }
+        return recordDTOMapper.apply(record);
 
     }
 
@@ -175,19 +175,39 @@ public class RecordServiceImp implements IRecordService{
             return null;
         }else{
             LOGGER.info("RECORD: salesDTO converted to sale successfully");
-          return  sales.stream().map(saleDTO -> {
+            return validateIfSalesAreInRecord(sales.stream().map(saleDTO -> {
                 return iSaleService.findSaleById(saleDTO.id());
-            }).collect(Collectors.toSet());
+            }).collect(Collectors.toSet()));
+
         }
+    }
+
+    private Set<Sale> validateIfSalesAreInRecord(Set<Sale> sales){
+        Set<Record> records = recordRepository.findAll().stream().collect(Collectors.toSet());
+        Set<Sale> s = new HashSet<>();
+
+        sales.stream().forEach(sale->{
+            records.forEach(r->{
+                if (!r.getSaleSet().contains(sale)){
+                    s.add(sale);
+                }{
+                    LOGGER.info("RECORD: there is a sale that already is in another record");
+                }
+            });
+        });
+        return s;
     }
 
     private Customer findCustomer(Long id){
         return iCustomerService.findCustomerById(id)!=null ? iCustomerService.findCustomerById(id) : null;
     }
 
+    private boolean haveCustomerRecord(Customer c){
+            return c.getRecord()!=null ? true:false;
+    }
     private boolean saleIsAlreadyInAnotherRecord(Sale sale) {
         boolean exist = false;
-        Set<Record> records = (Set<Record>) recordRepository.findAll();
+        Set<Record> records = recordRepository.findAll().stream().collect(Collectors.toSet());
         if(records!=null){
             for ( Record r :records ) {
                 if(r.getSaleSet().contains(sale)){

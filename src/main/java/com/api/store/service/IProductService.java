@@ -13,4 +13,6 @@ public interface IProductService {
     public ProductDTO findById(Long id);
     public Set<ProductDTO> findAll();
     public Product findProductById(Long id);
+    public boolean deleteProduct(Long id);
+    public boolean validateAndModifyAmountOfProduct(Product product,int amount);
 }

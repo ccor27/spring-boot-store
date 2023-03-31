@@ -68,6 +68,7 @@ public class SaleServiceImp implements ISaleService{
        if(sale!=null && productDTO!=null){
            Product product = iProductService.findProductById(productDTO.id());
            if(product!=null){
+               iProductService.validateAndModifyAmountOfProduct(product, productDTO.amount());
                sale.getProducts().add(product);
                saleRepository.save(sale);
                LOGGER.info("SALE: the product added successfully");
