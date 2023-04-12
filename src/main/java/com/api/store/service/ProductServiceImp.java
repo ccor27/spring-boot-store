@@ -1,8 +1,10 @@
 package com.api.store.service;
 
 import com.api.store.model.Product;
+import com.api.store.model.ProductSold;
 import com.api.store.model.dto.ProductDTO;
 import com.api.store.model.dto.ProductRegistrationRequest;
+import com.api.store.model.dto.ProductSoldDTO;
 import com.api.store.model.dto.ProductUpdateRequest;
 import com.api.store.repository.ProductRepository;
 import com.api.store.service.mapper.ProductDTOMapper;
@@ -10,9 +12,9 @@ import org.apache.logging.slf4j.SLF4JLogger;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,6 +27,8 @@ public class ProductServiceImp implements IProductService{
     private ProductRepository productRepository;
     @Autowired
     private ProductDTOMapper productDTOMapper;
+    @Autowired
+    private IProductSoldService iProductSoldService;
     @Override
     public ProductDTO save(ProductRegistrationRequest productRegistrationRequest) {
         Product product = new Product(
@@ -88,6 +92,12 @@ public class ProductServiceImp implements IProductService{
     }
 
     @Override
+    public Product findByBarCode(String barCode) {
+        Product p = productRepository.findProductByBarCode(barCode);
+        return p!=null ? p : null;
+    }
+
+    @Override
     public boolean deleteProduct(Long id) {
         Product p = findProductById(id);
         if(productRepository!=null){
@@ -98,7 +108,17 @@ public class ProductServiceImp implements IProductService{
         }
     }
     @Override
-    public boolean validateAndModifyAmountOfProduct(Product product,int amount){//already is validated of the product exist
+    public boolean validateAmountOfProduct(Product product, int amount){//already is validated of the product exist
+        if(product.getAmount()>=amount){
+            //is possible make the sale
+            return true;
+        }else{
+            return false;
+        }
+    }
+
+    @Override
+    public boolean modifyAmountOfProduct(Product product, int amount) {
         if(product.getAmount()>=amount){
             product.setAmount(product.getAmount()-amount);
             productRepository.save(product);
@@ -106,5 +126,24 @@ public class ProductServiceImp implements IProductService{
         }else{
             return false;
         }
+    }
+
+    @Override
+    public Set<ProductSold> convertProductsDTOToProduct(Set<ProductSoldDTO> productDTOS){
+
+        if(productDTOS ==null || productDTOS.isEmpty())
+            return null;
+        Set<ProductSoldDTO> solds = new HashSet<>();
+        productDTOS.forEach(productSoldDTO -> {
+            Product p = findByBarCode(productSoldDTO.barCode());
+            if(p!=null){
+                if(validateAmountOfProduct(p, productSoldDTO.amount())){
+                    modifyAmountOfProduct(p, productSoldDTO.amount());
+                    solds.add(productSoldDTO);
+                }
+            }
+        });
+        return  iProductSoldService.saveProducts(solds);
+
     }
 }

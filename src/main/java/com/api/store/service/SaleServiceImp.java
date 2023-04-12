@@ -1,8 +1,10 @@
 package com.api.store.service;
 
 import com.api.store.model.Product;
+import com.api.store.model.ProductSold;
 import com.api.store.model.Sale;
 import com.api.store.model.dto.ProductDTO;
+import com.api.store.model.dto.ProductSoldDTO;
 import com.api.store.model.dto.SaleDTO;
 import com.api.store.model.dto.SaleRegistrationRequest;
 import com.api.store.repository.SaleRepository;
@@ -12,6 +14,7 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.HashSet;
 import java.util.Set;
 import java.util.stream.Collectors;
 
@@ -25,13 +28,15 @@ public class SaleServiceImp implements ISaleService{
     private SaleDTOMapper saleDTOMapper;
     @Autowired
     private IProductService iProductService;
+    @Autowired
+    private IProductSoldService iProductSoldService;
 
 
     @Override
     public SaleDTO save(SaleRegistrationRequest saleRegistrationRequest) {
         Sale sale= new Sale(
                 saleRegistrationRequest.concept(),
-                convertProductsDTOToProduct(saleRegistrationRequest.productsDTO())
+                iProductService.convertProductsDTOToProduct(saleRegistrationRequest.productsDTO())
         );
         saleRepository.save(sale);
         LOGGER.info("Sale saved successfully "+sale.toString() );
@@ -63,18 +68,21 @@ public class SaleServiceImp implements ISaleService{
     }
 
     @Override
-    public SaleDTO addProduct(Long id, ProductDTO productDTO) {
+    public SaleDTO addProduct(Long id, ProductSoldDTO productSoldDTO) {
        Sale sale = findSaleById(id);
-       if(sale!=null && productDTO!=null){
-           Product product = iProductService.findProductById(productDTO.id());
-           if(product!=null){
-               iProductService.validateAndModifyAmountOfProduct(product, productDTO.amount());
-               sale.getProducts().add(product);
-               saleRepository.save(sale);
-               LOGGER.info("SALE: the product added successfully");
-               return saleDTOMapper.apply(sale);
+       if(sale!=null && productSoldDTO!=null){
+           Product product = iProductService.findByBarCode(productSoldDTO.barCode());
+           if(product!=null && iProductService.validateAmountOfProduct(product, productSoldDTO.amount())){
+                   iProductService.modifyAmountOfProduct(product, productSoldDTO.amount());
+                   iProductSoldService.save(productSoldDTO);
+                   ProductSold productSold = iProductSoldService.findByBarCode(productSoldDTO.barCode());
+                   sale.getProducts().add(productSold);
+                   saleRepository.save(sale);
+                   LOGGER.info("SALE: the product added successfully");
+                   return saleDTOMapper.apply(sale);
+
            }else{
-               LOGGER.error("SALE: the product doesn't exist, therefore is not possible add it to the sale");
+               LOGGER.error("SALE: the product doesn't exist or there aren't amount needed, therefore is not possible add it to the sale");
                return null;
            }
        }else{
@@ -82,14 +90,13 @@ public class SaleServiceImp implements ISaleService{
            return null;
        }
     }
-
     @Override
-    public SaleDTO removeProduct(Long id, ProductDTO productDTO) {
+    public SaleDTO removeProduct(Long id, ProductSoldDTO productSoldDTO) {
         Sale sale = findSaleById(id);
-        if(sale!=null && productDTO!=null){
-            Product product = iProductService.findProductById(productDTO.id());
-            if(product!=null){
-                sale.getProducts().remove(product);
+        if(sale!=null && productSoldDTO!=null){
+            ProductSold productSold = iProductSoldService.findByBarCode(productSoldDTO.barCode());
+            if(productSold!=null){
+                sale.getProducts().remove(productSold);
                 saleRepository.save(sale);
                 LOGGER.info("SALE: the product removed successfully");
                 return saleDTOMapper.apply(sale);
@@ -102,16 +109,5 @@ public class SaleServiceImp implements ISaleService{
             return null;
         }
     }
-
-    public Set<Product> convertProductsDTOToProduct(Set<ProductDTO> productDTOS){
-
-        if(productDTOS ==null || productDTOS.isEmpty())
-            return null;
-
-        return productDTOS.stream().map(productDTO -> {
-            return iProductService.findProductById(productDTO.id());
-        }).collect(Collectors.toSet());
-    }
-
 
 }

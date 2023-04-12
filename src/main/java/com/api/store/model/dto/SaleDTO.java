@@ -9,6 +9,6 @@ public record   SaleDTO(
         String concept,
         Date date,
         Double price,
-        Set<ProductDTO> productDTOS
+        Set<ProductSoldDTO> productDTOS
 ) {
 }

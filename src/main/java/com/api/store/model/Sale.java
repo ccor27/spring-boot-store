@@ -15,10 +15,10 @@ public class Sale {
     @ManyToMany
     @Column(unique = false,nullable = false)
     @JoinTable(name = "sale_products")
-    private Set<Product> products;
+    private Set<ProductSold> products;
     public Sale(){}
 
-    public Sale(String concept,  Set<Product> products) {
+    public Sale(String concept,  Set<ProductSold> products) {
         this.concept = concept;
         this.products = products;
         knowPrice();
@@ -57,7 +57,7 @@ public class Sale {
         if(this.products!=null){
 
             this.products.stream().forEach(product -> {
-                this.price+=product.getPrice()*product.getAmount();
+                this.price+=product.getTotalPrice();
             });
 
         }
@@ -72,16 +72,16 @@ public class Sale {
         this.price = price;
     }
 
-    public Set<Product> getProducts() {
+    public Set<ProductSold> getProducts() {
         return products;
     }
 
-    public void setProducts(Set<Product> products) {
+    public void setProducts(Set<ProductSold> products) {
         this.products = products;
     }
 
-     public void addProduct(Product product){
-        this.products.add(product);
+     public void addProduct(ProductSold productSold){
+        this.products.add(productSold);
     }
     @Override
     public String toString() {

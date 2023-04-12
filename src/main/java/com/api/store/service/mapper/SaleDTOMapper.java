@@ -2,11 +2,14 @@ package com.api.store.service.mapper;
 
 import com.api.store.model.Customer;
 import com.api.store.model.Product;
+import com.api.store.model.ProductSold;
 import com.api.store.model.Sale;
 import com.api.store.model.dto.CustomerDTO;
 import com.api.store.model.dto.ProductDTO;
+import com.api.store.model.dto.ProductSoldDTO;
 import com.api.store.model.dto.SaleDTO;
 import com.api.store.service.ICustomerService;
+import com.api.store.service.IProductService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -19,7 +22,9 @@ public class SaleDTOMapper implements Function<Sale, SaleDTO> {
     @Autowired
     private CustomerDTOMapper customerDTOMapper;
     @Autowired
-    private ProductDTOMapper productDTOMapper;
+    private ProductSoldDTOMapper productSoldDTOMapper;
+    @Autowired
+    private IProductService iProductService;
     @Override
     public SaleDTO apply(Sale sale) {
         return  new SaleDTO(
@@ -32,20 +37,13 @@ public class SaleDTOMapper implements Function<Sale, SaleDTO> {
         );
     }
 
-    private Set<ProductDTO> productsExisting(Set<Product> products){
-        if(products==null || products.isEmpty()){
+    private Set<ProductSoldDTO> productsExisting(Set<ProductSold> productSolds){
+        if(productSolds==null || productSolds.isEmpty()){
             return null;
         }else{
-            return products.stream().map(product ->{
-                return productDTOMapper.apply(product);
+            return productSolds.stream().map(productSold ->{
+                return productSoldDTOMapper.apply(productSold);
             }).collect(Collectors.toSet());
-        }
-    }
-    private CustomerDTO customerExist(Customer customer){
-        if(customer!=null){
-            return customerDTOMapper.apply(customer);
-        }else{
-            return null;
         }
     }
 }

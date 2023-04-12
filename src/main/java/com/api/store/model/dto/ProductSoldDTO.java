@@ -1,10 +1,10 @@
 package com.api.store.model.dto;
 
-public record ProductDTO(
+public record ProductSoldDTO(
         Long id,
         String name,
         String barCode,
-        Double price,
-        Integer amount
+        Integer amount,
+        Double totalPrice
 ) {
 }

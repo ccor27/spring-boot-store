@@ -1,6 +1,7 @@
 package com.api.store.controller;
 
 import com.api.store.model.dto.ProductDTO;
+import com.api.store.model.dto.ProductSoldDTO;
 import com.api.store.model.dto.SaleDTO;
 import com.api.store.model.dto.SaleRegistrationRequest;
 import com.api.store.service.ISaleService;
@@ -62,16 +63,16 @@ public class SaleController {
     }
     @PutMapping("{id}/product")
     @Operation(summary = "Add product",description = "To add a product to specific sale")
-    public ResponseEntity<?> addProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productDTO){
-        SaleDTO saleDTO = iSaleService.addProduct(id,productDTO);
+    public ResponseEntity<?> addProduct(@PathVariable("id") Long id, @RequestBody ProductSoldDTO productSoldDTO){
+        SaleDTO saleDTO = iSaleService.addProduct(id,productSoldDTO);
         errors.clear();
         errors.put("Error","The product or the sale doesn't exist");
         return saleDTO!=null ? new ResponseEntity<>(saleDTO,HttpStatus.OK) : new ResponseEntity<>(errors,HttpStatus.INTERNAL_SERVER_ERROR);
     }
     @DeleteMapping("{id}/product")
     @Operation(summary = "Remove product from sale",description = "To remove a product to specific sale")
-    public ResponseEntity<?> removeProduct(@PathVariable("id") Long id, @RequestBody ProductDTO productDTO){
-        SaleDTO saleDTO = iSaleService.removeProduct(id,productDTO);
+    public ResponseEntity<?> removeProduct(@PathVariable("id") Long id, @RequestBody ProductSoldDTO productSoldDTO){
+        SaleDTO saleDTO = iSaleService.removeProduct(id,productSoldDTO);
         errors.clear();
         errors.put("Error","The product or the sale doesn't exist");
         return saleDTO!=null ? new ResponseEntity<>(saleDTO,HttpStatus.OK) : new ResponseEntity<>(errors,HttpStatus.INTERNAL_SERVER_ERROR);

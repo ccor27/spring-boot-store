@@ -3,6 +3,6 @@ import java.util.Set;
 
 public record SaleRegistrationRequest(
         String concept,
-        Set<ProductDTO> productsDTO
+        Set<ProductSoldDTO> productsDTO
 ) {
 }
